@@ -1,0 +1,12 @@
+{
+    "require": {
+        "php": ">=8.0",
+        "ext-mysqli": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-session": "*"
+    },
+    "scripts": {
+        "start": "php -S 0.0.0.0:80"
+    }
+}
