@@ -377,22 +377,6 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
       <i class="bi bi-chevron-right up-arrow"></i>
     </a>
     <?php endif; ?>
-
-    <div class="up-divider"></div>
-    <p class="up-section-label">Soporte</p>
-
-    <a href="/ayuda.php" class="up-item">
-      <span class="up-icon blue"><i class="bi bi-question-circle"></i></span>
-      <span>Ayuda</span>
-      <i class="bi bi-chevron-right up-arrow"></i>
-    </a>
-
-    <a href="/acerca.php" class="up-item">
-      <span class="up-icon purple"><i class="bi bi-info-circle"></i></span>
-      <span>Acerca de NEXSYS</span>
-      <i class="bi bi-chevron-right up-arrow"></i>
-    </a>
-
   </div>
 
   <!-- Pie: cerrar sesión -->
