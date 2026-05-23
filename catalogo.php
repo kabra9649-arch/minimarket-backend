@@ -196,6 +196,18 @@ $mostrarSplash = !isset($_GET['agregado']) && !isset($_GET['buscar']) && !$cat &
     to   { opacity: 1; transform: translateY(0); }
   }
 
+  /* ── MODAL DETALLE ── */
+  .modal-content { background: var(--card-bg); color: var(--text); border-radius: 16px !important; overflow: hidden; }
+  .modal-header  { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; border: none; }
+  .modal-footer  { border: none; padding: 12px 16px; background: var(--card-bg); }
+  .modal-prod-img { width: 100%; height: 260px; object-fit: cover; }
+  .modal-prod-placeholder { width: 100%; height: 260px; background: #f0f4f8; display: flex; align-items: center; justify-content: center; font-size: 60px; color: #cbd5e1; }
+  .modal-badge { background: var(--accent); color: #fff; font-size: 11px; letter-spacing: 1px; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+  .modal-precio { font-size: 24px; font-weight: 800; color: var(--accent); margin: 6px 0; }
+  .modal-stock  { font-size: 13px; color: #22c55e; margin-bottom: 10px; }
+  .modal-desc   { font-size: 13px; color: #64748b; line-height: 1.7; }
+  .prod-card    { cursor: pointer; }
+
   /* ── NAVBAR ── */
   .navbar-top { background:linear-gradient(135deg,var(--primary),var(--accent)); padding:10px 24px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.2); }
   .navbar-top .brand { color:#fff; font-weight:700; font-size:18px; text-decoration:none; }
@@ -348,14 +360,25 @@ function closeToast(id){const el=document.getElementById(id);if(!el)return;el.st
     ?>
     <div class="col-6 col-md-4 col-lg-3">
       <div class="prod-card">
+        <?php
+          $imgEsc  = addslashes(htmlspecialchars($p['imagen'] ?? ''));
+          $nomEsc  = addslashes(htmlspecialchars($p['nombre']));
+          $catEsc  = addslashes(htmlspecialchars($p['categoria']));
+          $precio  = number_format($p['precio_venta'], 2);
+          $stock   = (int)$p['stock_actual'];
+          $pid     = (int)$p['id'];
+        ?>
         <?php if ($p['imagen']): ?>
-          <img src="<?= htmlspecialchars($p['imagen']) ?>" class="prod-img" alt="<?= htmlspecialchars($p['nombre']) ?>" onerror="this.parentElement.innerHTML='<div class=\'prod-img-placeholder\'><i class=\'bi bi-box-seam\'></i></div>'">
+          <img src="<?= htmlspecialchars($p['imagen']) ?>" class="prod-img" alt="<?= htmlspecialchars($p['nombre']) ?>"
+               style="cursor:pointer;"
+               onclick="verDetalle('<?= $imgEsc ?>','<?= $nomEsc ?>','<?= $catEsc ?>',<?= $precio ?>,<?= $stock ?>)"
+               onerror="this.parentElement.innerHTML='<div class=\'prod-img-placeholder\'><i class=\'bi bi-box-seam\'></i></div>'">
         <?php else: ?>
-          <div class="prod-img-placeholder"><i class="bi bi-box-seam"></i></div>
+          <div class="prod-img-placeholder" style="cursor:pointer;" onclick="verDetalle('','<?= $nomEsc ?>','<?= $catEsc ?>',<?= $precio ?>,<?= $stock ?>)"><i class="bi bi-box-seam"></i></div>
         <?php endif; ?>
         <div class="prod-body">
           <div class="prod-cat"><?= htmlspecialchars($p['categoria']) ?></div>
-          <div class="prod-name"><?= htmlspecialchars($p['nombre']) ?></div>
+          <div class="prod-name" style="cursor:pointer;" onclick="verDetalle('<?= $imgEsc ?>','<?= $nomEsc ?>','<?= $catEsc ?>',<?= $precio ?>,<?= $stock ?>)"><?= htmlspecialchars($p['nombre']) ?></div>
           <div class="prod-price">RD$ <?= number_format($p['precio_venta'],2) ?></div>
           <div class="prod-stock"><i class="bi bi-check-circle-fill text-success me-1"></i><?= $p['stock_actual'] ?> disponibles</div>
           <form method="POST">
@@ -430,6 +453,51 @@ function toggleTheme(){
 <?php endif; ?>
 
 <?php // include __DIR__ . '/views/layouts/nexsys_widget.php'; ?>
+
+<!-- ── MODAL DETALLE PRODUCTO ── -->
+<div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitulo"></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div id="modalImgWrap"></div>
+        <div class="p-4">
+          <span class="modal-badge" id="modalCat"></span>
+          <h5 id="modalNombre" style="font-weight:700;margin-bottom:4px;"></h5>
+          <div class="modal-precio" id="modalPrecio"></div>
+          <div class="modal-stock" id="modalStock"><i class="bi bi-check-circle-fill me-1"></i><span id="modalStockNum"></span> disponibles</div>
+          <p class="modal-desc">Producto de alta calidad disponible en nuestro catálogo. Agregalo al carrito y recibelo en tu puerta.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function verDetalle(img, nombre, categoria, precio, stock) {
+  document.getElementById('modalTitulo').textContent  = nombre;
+  document.getElementById('modalNombre').textContent  = nombre;
+  document.getElementById('modalCat').textContent     = categoria;
+  document.getElementById('modalPrecio').textContent  = 'RD$ ' + parseFloat(precio).toFixed(2);
+  document.getElementById('modalStockNum').textContent = stock;
+
+  const wrap = document.getElementById('modalImgWrap');
+  if (img) {
+    wrap.innerHTML = `<img src="${img}" class="modal-prod-img" alt="${nombre}" onerror="this.parentElement.innerHTML='<div class=\'modal-prod-placeholder\'><i class=\'bi bi-box-seam\'></i></div>'">`;
+  } else {
+    wrap.innerHTML = `<div class="modal-prod-placeholder"><i class="bi bi-box-seam"></i></div>`;
+  }
+
+  new bootstrap.Modal(document.getElementById('modalProducto')).show();
+}
+</script>
 
 </body>
 </html>
