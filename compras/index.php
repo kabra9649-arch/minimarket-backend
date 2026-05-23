@@ -124,7 +124,7 @@ include '../views/layouts/header.php';
 </div>
 
 <div class="card">
-  <div class="card-header"><i class="bi bi-list-ul me-2"></i>Historial de Órdenes</div>
+  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-list-ul me-2"></i>Historial de Órdenes</span><input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)"></div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover table-sm mb-0">

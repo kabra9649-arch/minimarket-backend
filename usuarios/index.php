@@ -114,7 +114,7 @@ include '../views/layouts/header.php';
 
 <!-- TABLA -->
 <div class="card">
-  <div class="card-header"><i class="bi bi-people me-2"></i>Usuarios del Sistema</div>
+  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-people me-2"></i>Usuarios del Sistema</span><input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)"></div>
   <div class="card-body p-0">
     <table class="table table-hover mb-0">
       <thead><tr><th>#</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Registrado</th><th>Acciones</th></tr></thead>

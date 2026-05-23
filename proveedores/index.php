@@ -77,7 +77,7 @@ include '../views/layouts/header.php';
 </div>
 
 <div class="card">
-  <div class="card-header"><i class="bi bi-table me-2"></i>Listado de Proveedores</div>
+  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-truck me-2"></i>Listado de Proveedores</span><input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)"></div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover table-sm mb-0">
