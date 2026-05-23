@@ -36,7 +36,7 @@ $categorias = $db->query("SELECT * FROM categorias ORDER BY nombre");
 $totalCarrito = array_sum($_SESSION['carrito']);
 
 // Mostrar splash solo si no viene de una acción (primera visita)
-$mostrarSplash = !isset($_GET['agregado']) && !isset($_GET['buscar']) && !$cat && !isset($_GET['nosplash']);
+$mostrarSplash = !isset($_GET['agregado']) && !isset($_GET['buscar']) && !$cat && !isset($_GET['nosplash']) && !isset($_GET['desde_carrito']);
 ?>
 <!DOCTYPE html>
 <html lang="es">

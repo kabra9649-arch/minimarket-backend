@@ -73,9 +73,9 @@ $total = $subtotal + $envio;
 <body>
 
 <div class="navbar-top">
-  <a href="catalogo.php" class="brand"><i class="bi bi-shop me-2"></i>MiniMarket G2</a>
+  <a href="catalogo.php?nosplash=1" class="brand"><i class="bi bi-shop me-2"></i>MiniMarket G2</a>
   <div class="d-flex gap-2">
-    <a href="catalogo.php" class="btn-nav"><i class="bi bi-arrow-left me-1"></i>Seguir comprando</a>
+    <a href="catalogo.php?nosplash=1" class="btn-nav"><i class="bi bi-arrow-left me-1"></i>Seguir comprando</a>
     <a href="logout_cliente.php" class="btn-nav" style="background:rgba(255,0,0,.2)"><i class="bi bi-box-arrow-right"></i></a>
   </div>
 </div>
@@ -88,7 +88,7 @@ $total = $subtotal + $envio;
     <div class="card-body">
       <i class="bi bi-cart-x fs-1 text-muted d-block mb-3"></i>
       <h5 class="text-muted">Tu carrito está vacío</h5>
-      <a href="catalogo.php" class="btn btn-primary mt-3"><i class="bi bi-shop me-2"></i>Ver productos</a>
+      <a href="catalogo.php?nosplash=1" class="btn btn-primary mt-3"><i class="bi bi-shop me-2"></i>Ver productos</a>
     </div>
   </div>
   <?php else: ?>
@@ -102,7 +102,7 @@ $total = $subtotal + $envio;
           <?php foreach ($items as $item): ?>
           <div class="d-flex align-items-center gap-3 p-3 border-bottom">
             <?php if ($item['imagen'] && file_exists('uploads/productos/'.$item['imagen'])): ?>
-              <img src="uploads/productos/<?= htmlspecialchars($item['imagen']) ?>" class="item-img">
+              <img src="/uploads/productos/<?= htmlspecialchars($item['imagen']) ?>" class="item-img">
             <?php else: ?>
               <div class="item-placeholder"><i class="bi bi-box-seam"></i></div>
             <?php endif; ?>
@@ -148,7 +148,7 @@ $total = $subtotal + $envio;
         <a href="checkout.php" class="btn btn-primary w-100 fw-semibold">
           <i class="bi bi-credit-card me-2"></i>Proceder al pago
         </a>
-        <a href="catalogo.php" class="btn btn-outline-secondary w-100 mt-2 btn-sm">
+        <a href="catalogo.php?nosplash=1" class="btn btn-outline-secondary w-100 mt-2 btn-sm">
           <i class="bi bi-arrow-left me-1"></i>Seguir comprando
         </a>
       </div>
