@@ -64,9 +64,15 @@ function padRight($text, $width) {
     border-radius: 4px;
   }
   @media print {
-    .btn-print { display: none; }
-    body { width: 100%; }
+  .btn-print { display: none; }
+  body { width: 100%; }
+
+  /* Elimina header y footer del browser (URL, fecha, título) */
+  @page {
+    margin: 0;
+    size: 80mm auto;
   }
+}
 </style>
 </head>
 <body>
