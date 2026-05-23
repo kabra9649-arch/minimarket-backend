@@ -129,7 +129,7 @@ function padRight($text, $width) {
 
 <div class="center">¡Gracias por su compra!</div>
 <div class="center">Vuelva pronto</div>
-<div class="center" style="margin-top:6px; font-size:10px;">Sistema Nexsys &mdash; 2026</div>
+<div class="center" style="margin-top:6px; font-size:10px;">Sistema Nexsys - 2026</div>
 
 <button class="btn-print" onclick="window.print()">🖨️ Imprimir Factura</button>
 
