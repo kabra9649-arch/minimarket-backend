@@ -215,7 +215,7 @@ $mostrarSplash = !isset($_GET['agregado']) && !isset($_GET['buscar']) && !$cat &
   /* ── CARDS ── */
   .prod-card { background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,.07); transition:transform .2s,box-shadow .2s; height:100%; display:flex; flex-direction:column; }
   .prod-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.12); }
-  .prod-img { width:100%; height:200px; object-fit:contain; background:#f8f9fa; padding:16px; }
+  .prod-img { width:100%; height:120px; object-fit:contain; background:#f8f9fa; padding:16px; }
   .prod-img-placeholder { width:100%; height:170px; background:linear-gradient(135deg,#E2E8F0,#CBD5E1); display:flex; align-items:center; justify-content:center; color:#94A3B8; font-size:40px; }
   .prod-body { padding:14px; flex:1; display:flex; flex-direction:column; }
   .prod-cat  { font-size:10px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.8px; margin-bottom:4px; }
