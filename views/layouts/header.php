@@ -452,10 +452,13 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
           <span class="badge bg-danger ms-auto" style="font-size:10px"><?= $no_leidos_menu ?></span>
         <?php endif; ?>
       </a>
-      <?php if ($rol === 'administrador'): ?>
-      <div class="nav-section">Administración</div>
-      <a href="/usuarios/index.php" class="<?= strpos($self,'usuarios')!==false?'active':'' ?>"><i class="bi bi-person-gear"></i> Usuarios</a>
-      <?php endif; ?>
+      <?php if ($rol === 'administrador' || $rol === 'gerente'): ?>
+<div class="nav-section">Administración</div>
+<a href="/empleados/index.php" class="<?= strpos($self,'empleados')!==false?'active':'' ?>"><i class="bi bi-person-badge"></i> Empleados</a>
+<?php endif; ?>
+<?php if ($rol === 'administrador'): ?>
+<a href="/usuarios/index.php" class="<?= strpos($self,'usuarios')!==false?'active':'' ?>"><i class="bi bi-person-gear"></i> Usuarios</a>
+<?php endif; ?>
     <?php endif; ?>
   </div>
 </div>
