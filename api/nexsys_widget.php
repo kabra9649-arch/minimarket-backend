@@ -3,6 +3,7 @@
      Incluir con: include 'views/layouts/nexsys_widget.php';
      ════════════════════════════════════════ -->
 <style>
+  <?php if (($user['rol'] ?? '') === 'administrador'): ?>
 /* ── NEXSYS WIDGET ── */
 #nexsys-btn {
   position: fixed; bottom: 24px; right: 24px; z-index: 9000;
@@ -280,4 +281,5 @@ async function sendNexsys(msgOverride) {
     input.focus();
   }
 }
+<?php endif; ?>
 </script>
