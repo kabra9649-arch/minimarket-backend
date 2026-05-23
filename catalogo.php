@@ -310,7 +310,7 @@ function closeToast(id){const el=document.getElementById(id);if(!el)return;el.st
         <span class="badge bg-warning text-dark ms-1"><?= $totalCarrito ?></span>
       <?php endif; ?>
     </a>
-    <a href="acceso.php" class="btn-carrito" style="background:rgba(255,0,0,.2);border-color:rgba(255,100,100,.4);">
+    <a href="logout_cliente.php" class="btn-carrito" style="background:rgba(255,0,0,.2);border-color:rgba(255,100,100,.4);">
       <i class="bi bi-box-arrow-right"></i>
     </a>
     <button onclick="toggleTheme()" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);border-radius:10px;padding:6px 12px;color:#fff;cursor:pointer;" title="Cambiar tema">
