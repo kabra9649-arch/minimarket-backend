@@ -429,7 +429,7 @@ function toggleTheme(){
 </script>
 <?php endif; ?>
 
-<?php include __DIR__ . '/views/layouts/nexsys_widget.php'; ?>
+<?php // include __DIR__ . '/views/layouts/nexsys_widget.php'; ?>
 
 </body>
 </html>
