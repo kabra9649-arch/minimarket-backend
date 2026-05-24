@@ -273,6 +273,50 @@ include 'views/layouts/header.php';
     </div>
   </div>
 
+  <?php
+    $totalVentas = (int)$ventasHoy["total"];
+    if ($totalVentas >= 10) {
+      $calidadColor = "linear-gradient(135deg,#0F6E56,#1a9e7a)";
+      $calidadIcon  = "bi-patch-check-fill";
+      $calidadLabel = "Excelente";
+      $calidadMsg   = "Tu desempeño hoy es sobresaliente. ¡Sigue así!";
+      $calidadPct   = 100;
+    } elseif ($totalVentas >= 5) {
+      $calidadColor = "linear-gradient(135deg,#1F4E79,#2E75B6)";
+      $calidadIcon  = "bi-graph-up-arrow";
+      $calidadLabel = "En progreso";
+      $calidadMsg   = "Vas por buen camino. Cada cliente cuenta.";
+      $calidadPct   = 60;
+    } elseif ($totalVentas >= 1) {
+      $calidadColor = "linear-gradient(135deg,#BF5800,#e07020)";
+      $calidadIcon  = "bi-arrow-up-circle";
+      $calidadLabel = "Iniciando";
+      $calidadMsg   = "El día apenas comienza. ¡Da lo mejor de ti!";
+      $calidadPct   = 20;
+    } else {
+      $calidadColor = "linear-gradient(135deg,#555,#777)";
+      $calidadIcon  = "bi-clock";
+      $calidadLabel = "Sin actividad";
+      $calidadMsg   = "Aún no hay ventas. ¡El equipo confía en ti!";
+      $calidadPct   = 0;
+    }
+  ?>
+  <div class="col-6 col-md-3">
+    <div class="card text-white h-100" style="background:<?= $calidadColor ?>;">
+      <div class="card-body py-3">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div class="small opacity-75">Calidad de Servicio</div>
+          <i class="bi <?= $calidadIcon ?> fs-4 opacity-60"></i>
+        </div>
+        <div class="fw-bold mb-1" style="font-size:16px;"><?= $calidadLabel ?></div>
+        <div style="background:rgba(255,255,255,.25);border-radius:4px;height:5px;margin-bottom:8px;">
+          <div style="width:<?= $calidadPct ?>%;background:#fff;height:100%;border-radius:4px;transition:width 1s;"></div>
+        </div>
+        <div style="font-size:10px;opacity:.85;line-height:1.4;"><?= $calidadMsg ?></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- Más vendidos hoy (cajero) -->
