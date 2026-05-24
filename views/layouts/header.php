@@ -191,7 +191,7 @@ table thead { background: var(--surface-2); }
 /* ── MOBILE ── */
 .mobile-menu-btn { display: flex; background: none; border: none; color: var(--primary); font-size: 22px; cursor: pointer; padding: 4px; }
 [data-theme="dark"] .mobile-menu-btn { color: #6eafd4; }
-.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 999; }
 .sidebar-overlay.open { display: block; }
 .sidebar { transform: translateX(-100%); transition: transform .3s; }
 .sidebar.open { transform: translateX(0); }
@@ -329,7 +329,7 @@ table thead { background: var(--surface-2); }
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#1F4E79">
-<link rel="icon" type="image/png" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
+<link rel="icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/r_max,q_auto,f_auto/v1779593890/nexsys_1_pnai3b.jpg">
 <link rel="apple-touch-icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
 <link rel="apple-touch-icon" href="/uploads/icon-192.png">
 <script>
