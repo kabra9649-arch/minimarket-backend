@@ -75,7 +75,7 @@ if (!$esCajero) {
     $ventas = $db->query("SELECT v.*,u.nombre AS cajero,c.nombre AS cliente FROM ventas v
         JOIN usuarios u ON v.usuario_id=u.id
         LEFT JOIN clientes c ON v.cliente_id=c.id
-        ORDER BY v.fecha DESC LIMIT 50");
+        ORDER BY v.id ASC LIMIT 50");
 }
 
 include '../views/layouts/header.php';

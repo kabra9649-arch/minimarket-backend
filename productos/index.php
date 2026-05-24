@@ -35,7 +35,7 @@ $editProduct = null;
 if (isset($_GET['edit']))
     $editProduct = $db->query("SELECT * FROM productos WHERE id=".(int)$_GET['edit'])->fetch_assoc();
 
-$productos   = $db->query("SELECT p.*,c.nombre AS categoria,pr.nombre AS proveedor FROM productos p JOIN categorias c ON p.categoria_id=c.id JOIN proveedores pr ON p.proveedor_id=pr.id WHERE p.activo=1 ORDER BY p.nombre");
+$productos   = $db->query("SELECT p.*,c.nombre AS categoria,pr.nombre AS proveedor FROM productos p JOIN categorias c ON p.categoria_id=c.id JOIN proveedores pr ON p.proveedor_id=pr.id WHERE p.activo=1 ORDER BY p.id ASC");
 $categorias  = $db->query("SELECT * FROM categorias ORDER BY nombre");
 $proveedores = $db->query("SELECT * FROM proveedores WHERE activo=1 ORDER BY nombre");
 

@@ -27,7 +27,7 @@ $db->query("INSERT INTO alertas (producto_id, tipo, mensaje)
     AND fecha_vencimiento >= CURDATE() AND activo=1
     AND id NOT IN (SELECT producto_id FROM alertas WHERE tipo='vencimiento' AND leida=0 AND DATE(fecha)=CURDATE())");
 
-$alertas = $db->query("SELECT a.*, p.nombre AS producto FROM alertas a JOIN productos p ON a.producto_id=p.id ORDER BY a.leida ASC, a.fecha DESC");
+$alertas = $db->query("SELECT a.*, p.nombre AS producto FROM alertas a JOIN productos p ON a.producto_id=p.id ORDER BY a.id ASC");
 $total_no_leidas = $db->query("SELECT COUNT(*) AS t FROM alertas WHERE leida=0")->fetch_assoc()['t'];
 
 include '../views/layouts/header.php';

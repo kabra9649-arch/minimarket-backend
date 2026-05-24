@@ -60,7 +60,7 @@ if (isset($_GET['pagar'])) {
     header('Location: index.php'); exit();
 }
 
-$compras     = $db->query("SELECT c.*,p.nombre AS proveedor,u.nombre AS usuario FROM compras c JOIN proveedores p ON c.proveedor_id=p.id JOIN usuarios u ON c.usuario_id=u.id ORDER BY c.fecha DESC");
+$compras     = $db->query("SELECT c.*,p.nombre AS proveedor,u.nombre AS usuario FROM compras c JOIN proveedores p ON c.proveedor_id=p.id JOIN usuarios u ON c.usuario_id=u.id ORDER BY c.id ASC");
 $proveedores = $db->query("SELECT * FROM proveedores WHERE activo=1 ORDER BY nombre");
 $productos   = $db->query("SELECT id,nombre,precio_compra FROM productos WHERE activo=1 ORDER BY nombre");
 $prods_arr   = [];

@@ -33,7 +33,7 @@ $editProv = null;
 if (isset($_GET['edit']))
     $editProv = $db->query("SELECT * FROM proveedores WHERE id=".(int)$_GET['edit'])->fetch_assoc();
 
-$proveedores = $db->query("SELECT * FROM proveedores WHERE activo=1 ORDER BY nombre");
+$proveedores = $db->query("SELECT * FROM proveedores WHERE activo=1 ORDER BY id ASC");
 
 include '../views/layouts/header.php';
 ?>

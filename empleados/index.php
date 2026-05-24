@@ -67,7 +67,7 @@ if (isset($_GET['toggle'])) {
     header('Location: index.php'); exit();
 }
 
-$empleados = $db->query("SELECT e.*, u.email AS usuario_email FROM empleados e LEFT JOIN usuarios u ON e.usuario_id=u.id ORDER BY e.nombre");
+$empleados = $db->query("SELECT e.*, u.email AS usuario_email FROM empleados e LEFT JOIN usuarios u ON e.usuario_id=u.id ORDER BY e.id ASC");
 $usuarios  = $db->query("SELECT id,nombre,email,rol FROM usuarios WHERE activo=1 ORDER BY nombre");
 $editando  = isset($_GET['editar']) ? $db->query("SELECT * FROM empleados WHERE id=".(int)$_GET['editar'])->fetch_assoc() : null;
 

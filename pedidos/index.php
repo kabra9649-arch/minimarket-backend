@@ -16,7 +16,7 @@ $pedidos = $db->query("
     LEFT JOIN clientes c ON p.cliente_id = c.id
     JOIN usuarios u ON p.usuario_id = u.id
     $where
-    ORDER BY p.fecha DESC
+    ORDER BY p.id ASC
     LIMIT 100
 ");
 

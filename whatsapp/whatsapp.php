@@ -13,7 +13,7 @@ if (isset($_GET['leer_todas'])) {
 }
 
 // Obtener alertas de n8n
-$alertas = $db->query("SELECT * FROM alertas_whatsapp ORDER BY fecha DESC");
+$alertas = $db->query("SELECT * FROM alertas_whatsapp ORDER BY id ASC");
 $total_no_leidas = $db->query("SELECT COUNT(*) AS t FROM alertas_whatsapp WHERE leido=0")->fetch_assoc()['t'];
 
 include '../views/layouts/header.php';

@@ -33,7 +33,7 @@ $editCat = null;
 if (isset($_GET['edit']))
     $editCat = $db->query("SELECT * FROM categorias WHERE id=".(int)$_GET['edit'])->fetch_assoc();
 
-$categorias = $db->query("SELECT c.*,COUNT(p.id) AS total_productos FROM categorias c LEFT JOIN productos p ON c.id=p.categoria_id AND p.activo=1 GROUP BY c.id ORDER BY c.nombre");
+$categorias = $db->query("SELECT c.*,COUNT(p.id) AS total_productos FROM categorias c LEFT JOIN productos p ON c.id=p.categoria_id AND p.activo=1 GROUP BY c.id ORDER BY c.id ASC");
 
 include '../views/layouts/header.php';
 ?>

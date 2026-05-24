@@ -61,7 +61,7 @@ if (isset($_GET['edit'])) {
     $editUser = $db->query("SELECT * FROM usuarios WHERE id=" . (int)$_GET['edit'])->fetch_assoc();
 }
 
-$usuarios = $db->query("SELECT * FROM usuarios ORDER BY activo DESC, nombre");
+$usuarios = $db->query("SELECT * FROM usuarios ORDER BY id ASC");
 
 include '../views/layouts/header.php';
 ?>

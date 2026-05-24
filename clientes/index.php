@@ -55,7 +55,7 @@ if (isset($_GET['eliminar']) && !$esCajero) {
 // Listado solo admin/gerente
 $clientes = !$esCajero ? $db->query("SELECT c.*, COUNT(v.id) AS total_compras, IFNULL(SUM(v.total),0) AS total_gastado
     FROM clientes c LEFT JOIN ventas v ON c.id=v.cliente_id AND v.estado='completada'
-    GROUP BY c.id ORDER BY c.nombre") : null;
+    GROUP BY c.id ORDER BY c.id ASC") : null;
 
 // Datos para editar
 $editando = null;
