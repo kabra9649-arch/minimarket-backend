@@ -36,7 +36,11 @@ while ($r = $rm2->fetch_assoc()) $meses[(int)$r['mes']] = (float)$r['total'];
 $rm = $db->query("SELECT metodo_pago, COUNT(*) AS cnt FROM ventas WHERE DATE(fecha)>=DATE_SUB(CURDATE(),INTERVAL 30 DAY) AND estado='completada' GROUP BY metodo_pago");
 while ($r = $rm->fetch_assoc()) $metodos[$r['metodo_pago']] = (int)$r['cnt'];
 
+// Ticket promedio hoy
+$ticketPromedio = $ventasHoy['total'] > 0 ? $ventasHoy['ingresos'] / $ventasHoy['total'] : 0;
+
 // Queries para cajero
+
 $cajero_id = $_SESSION['usuario_id'] ?? 0;
 $ultimaVenta = $db->query("SELECT v.id, v.num_factura, v.total, v.metodo_pago, v.fecha, c.nombre AS cliente FROM ventas v LEFT JOIN clientes c ON v.cliente_id=c.id WHERE v.usuario_id=$cajero_id AND v.estado='completada' ORDER BY v.fecha DESC LIMIT 1")->fetch_assoc();
 $topHoy = $db->query("SELECT p.nombre, SUM(dv.cantidad) AS qty, SUM(dv.subtotal) AS sub FROM detalle_ventas dv JOIN productos p ON dv.producto_id=p.id JOIN ventas v ON dv.venta_id=v.id WHERE DATE(v.fecha)=CURDATE() AND v.estado='completada' GROUP BY p.id ORDER BY qty DESC LIMIT 5");
@@ -77,6 +81,14 @@ include 'views/layouts/header.php';
     </div>
   </div>
   <?php if ($_SESSION['rol'] !== 'cajero'): ?>
+  <div class="col-6 col-md-3">
+    <div class="card text-white h-100" style="background:linear-gradient(135deg,#BF5800,#e07020);">
+      <div class="card-body py-3 d-flex justify-content-between align-items-center">
+        <div><div class="small opacity-75">Ticket promedio</div><div class="fw-bold" style="font-size:clamp(13px,3vw,18px)">RD$ <?= number_format($ticketPromedio,2) ?></div></div>
+        <i class="bi bi-graph-up fs-2 opacity-40"></i>
+      </div>
+    </div>
+  </div>
   <div class="col-6 col-md-3">
     <div class="card text-white h-100" style="background:<?= $stockBajo['total']>0?'#C00000':'#555' ?>;">
       <div class="card-body py-3 d-flex justify-content-between align-items-center">
@@ -197,70 +209,125 @@ include 'views/layouts/header.php';
 
 <!-- SECCIÓN CAJERO -->
 <?php if ($_SESSION['rol'] === 'cajero'): ?>
-<div class="row g-2 mb-3">
 
-  <!-- Última venta -->
-  <div class="col-12 col-md-4">
-    <div class="card h-100">
-      <div class="card-header py-2 text-white" style="background:#1F4E79;">
-        <i class="bi bi-receipt me-2"></i>Última Venta Realizada
-      </div>
-      <div class="card-body">
-        <?php if ($ultimaVenta): ?>
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted small">Factura</span>
-            <span class="fw-bold small"><?= htmlspecialchars($ultimaVenta['num_factura']) ?></span>
-          </div>
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted small">Cliente</span>
-            <span class="small"><?= htmlspecialchars($ultimaVenta['cliente'] ?? 'General') ?></span>
-          </div>
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted small">Hora</span>
-            <span class="small"><?= date('h:i A', strtotime($ultimaVenta['fecha'])) ?></span>
-          </div>
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted small">Método</span>
-            <span class="badge bg-success"><?= ucfirst($ultimaVenta['metodo_pago']) ?></span>
-          </div>
-          <hr class="my-2">
-          <div class="d-flex justify-content-between">
-            <span class="fw-bold">Total</span>
-            <span class="fw-bold" style="color:#2E75B6;font-size:18px;">RD$ <?= number_format($ultimaVenta['total'],2) ?></span>
-          </div>
-          <a href="ventas/factura.php?id=<?= $ultimaVenta['id'] ?>" target="_blank" class="btn btn-sm btn-outline-primary w-100 mt-3">
-            <i class="bi bi-printer me-1"></i>Ver Factura
+<!-- Bienvenida cajero -->
+<div class="row g-2 mb-3">
+  <div class="col-12">
+    <div class="card text-white" style="background:linear-gradient(135deg,#1F4E79 0%,#2E75B6 50%,#0F6E56 100%);border:none;">
+      <div class="card-body py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <div style="font-size:11px;opacity:.7;letter-spacing:2px;text-transform:uppercase;">Bienvenido al sistema</div>
+          <div style="font-size:22px;font-weight:700;"><?= htmlspecialchars($_SESSION['nombre'] ?? 'Cajero') ?> <span style="opacity:.6;font-size:14px;">— <?= date('l, d \d\e F \d\e Y') ?></span></div>
+          <div style="font-size:12px;opacity:.7;margin-top:2px;"><i class="bi bi-clock me-1"></i><span id="reloj-cajero"></span></div>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="ventas/nueva_venta.php" class="btn text-white fw-bold px-4" style="background:rgba(255,255,255,.2);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.3);">
+            <i class="bi bi-plus-circle me-2"></i>Nueva Venta
           </a>
-        <?php else: ?>
-          <div class="text-center text-muted py-4">
-            <i class="bi bi-receipt fs-1 d-block mb-2 opacity-25"></i>
-            <small>No hay ventas hoy</small>
-          </div>
-        <?php endif; ?>
+          <a href="clientes/crear.php" class="btn text-white fw-bold px-4" style="background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.2);">
+            <i class="bi bi-person-plus me-2"></i>Nuevo Cliente
+          </a>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Top productos hoy -->
-  <div class="col-12 col-md-4">
+<!-- KPIs cajero -->
+<div class="row g-2 mb-3">
+  <div class="col-6 col-md-3">
+    <div class="card text-white h-100" style="background:#1F4E79;">
+      <div class="card-body py-3 d-flex justify-content-between align-items-center">
+        <div>
+          <div class="small opacity-75">Mis ventas hoy</div>
+          <div class="fs-4 fw-bold"><?= $ventasHoy['total'] ?></div>
+        </div>
+        <i class="bi bi-receipt fs-2 opacity-40"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-white h-100" style="background:#0F6E56;">
+      <div class="card-body py-3 d-flex justify-content-between align-items-center">
+        <div>
+          <div class="small opacity-75">Ingresos hoy</div>
+          <div class="fw-bold" style="font-size:clamp(12px,3vw,17px)">RD$ <?= number_format($ventasHoy['ingresos'],0) ?></div>
+        </div>
+        <i class="bi bi-cash-stack fs-2 opacity-40"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-white h-100" style="background:linear-gradient(135deg,#BF5800,#e07020);">
+      <div class="card-body py-3 d-flex justify-content-between align-items-center">
+        <div>
+          <div class="small opacity-75">Ticket promedio</div>
+          <div class="fw-bold" style="font-size:clamp(12px,3vw,17px)">RD$ <?= number_format($ticketPromedio,2) ?></div>
+        </div>
+        <i class="bi bi-graph-up fs-2 opacity-40"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-white h-100" style="background:#5B4FCF;">
+      <div class="card-body py-3 d-flex justify-content-between align-items-center">
+        <div>
+          <div class="small opacity-75">Stock bajo</div>
+          <div class="fs-4 fw-bold"><?= $stockBajo['total'] ?></div>
+          <div style="font-size:10px;opacity:.7;">productos</div>
+        </div>
+        <i class="bi bi-exclamation-triangle fs-2 opacity-40"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Más vendidos hoy (cajero) -->
+<div class="row g-2 mb-3">
+  <div class="col-12 col-md-8">
     <div class="card h-100">
-      <div class="card-header py-2 text-white" style="background:#0F6E56;">
-        <i class="bi bi-star me-2"></i>Más Vendidos Hoy
+      <div class="card-header py-2 text-white d-flex justify-content-between align-items-center" style="background:#0F6E56;">
+        <span><i class="bi bi-star-fill me-2"></i>Más Vendidos Hoy</span>
+        <span class="badge bg-light text-dark" style="font-size:10px;"><?= date('d/m/Y') ?></span>
       </div>
       <div class="card-body p-0">
-        <table class="table table-sm mb-0">
-          <thead><tr><th>#</th><th>Producto</th><th class="text-end">Cant</th><th class="text-end">RD$</th></tr></thead>
-          <tbody>
-            <?php $rank=0; while($tp=$topHoy->fetch_assoc()): $rank++; ?>
+        <table class="table table-hover table-sm mb-0">
+          <thead style="background:rgba(0,0,0,.05);">
             <tr>
-              <td><span class="badge" style="background:#1F4E79;"><?= $rank ?></span></td>
-              <td class="small"><?= htmlspecialchars(substr($tp['nombre'],0,18)) ?><?= strlen($tp['nombre'])>18?'…':'' ?></td>
-              <td class="text-end small"><?= $tp['qty'] ?></td>
-              <td class="text-end small"><?= number_format($tp['sub'],0) ?></td>
+              <th style="width:40px;" class="ps-3">#</th>
+              <th>Producto</th>
+              <th class="text-center">Unidades</th>
+              <th class="text-end pe-3">Subtotal</th>
+              <th class="text-end pe-3">Barra</th>
             </tr>
-            <?php endwhile; ?>
-            <?php if($rank===0): ?>
-            <tr><td colspan="4" class="text-center text-muted py-3 small">Sin ventas hoy</td></tr>
+          </thead>
+          <tbody>
+            <?php
+              $topHoyArr = [];
+              while($tp=$topHoy->fetch_assoc()) $topHoyArr[] = $tp;
+              $maxQty = !empty($topHoyArr) ? max(array_column($topHoyArr,'qty')) : 1;
+              foreach($topHoyArr as $rank => $tp):
+              $pct = $maxQty > 0 ? round($tp['qty']/$maxQty*100) : 0;
+              $colors = ['#1F4E79','#2E75B6','#0F6E56','#BF5800','#5B4FCF'];
+              $color = $colors[$rank] ?? '#888';
+            ?>
+            <tr>
+              <td class="ps-3"><span class="badge rounded-pill" style="background:<?= $color ?>;min-width:24px;"><?= $rank+1 ?></span></td>
+              <td class="fw-semibold small"><?= htmlspecialchars($tp['nombre']) ?></td>
+              <td class="text-center"><span class="badge bg-light text-dark border"><?= $tp['qty'] ?> uds</span></td>
+              <td class="text-end pe-3 small fw-bold">RD$ <?= number_format($tp['sub'],2) ?></td>
+              <td class="text-end pe-3" style="width:120px;">
+                <div style="background:#e9ecef;border-radius:4px;height:8px;overflow:hidden;">
+                  <div style="width:<?= $pct ?>%;background:<?= $color ?>;height:100%;border-radius:4px;transition:width .5s;"></div>
+                </div>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+            <?php if(empty($topHoyArr)): ?>
+            <tr><td colspan="5" class="text-center text-muted py-4">
+              <i class="bi bi-bar-chart fs-2 d-block mb-2 opacity-25"></i>
+              Sin ventas registradas hoy
+            </td></tr>
             <?php endif; ?>
           </tbody>
         </table>
@@ -268,30 +335,64 @@ include 'views/layouts/header.php';
     </div>
   </div>
 
-  <!-- Acceso rápido -->
+  <!-- Clima/Hora + Mensaje motivacional -->
   <div class="col-12 col-md-4">
-    <div class="card h-100">
-      <div class="card-header py-2 text-white" style="background:#5B4FCF;">
-        <i class="bi bi-lightning me-2"></i>Acceso Rápido
+    <div class="row g-2 h-100">
+      <!-- Reloj -->
+      <div class="col-12">
+        <div class="card text-white" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+          <div class="card-body text-center py-3">
+            <div style="font-size:11px;letter-spacing:3px;opacity:.6;text-transform:uppercase;">Hora actual</div>
+            <div id="reloj-grande" style="font-size:36px;font-weight:800;font-family:monospace;letter-spacing:2px;color:#2E75B6;"></div>
+            <div id="fecha-cajero" style="font-size:12px;opacity:.6;"></div>
+          </div>
+        </div>
       </div>
-      <div class="card-body d-flex flex-column gap-3 justify-content-center">
-        <a href="ventas/nueva_venta.php" class="btn btn-lg w-100 text-white" style="background:linear-gradient(135deg,#1F4E79,#2E75B6);padding:18px;">
-          <i class="bi bi-plus-circle fs-4 d-block mb-1"></i>
-          <span class="fw-bold">Nueva Venta</span>
-        </a>
-        <a href="clientes/index.php" class="btn btn-lg w-100 text-white" style="background:linear-gradient(135deg,#0F6E56,#1a9e7a);padding:18px;">
-          <i class="bi bi-people fs-4 d-block mb-1"></i>
-          <span class="fw-bold">Ver Clientes</span>
-        </a>
-        <a href="ventas/index.php" class="btn btn-lg w-100 text-white" style="background:linear-gradient(135deg,#5B4FCF,#7a6de0);padding:18px;">
-          <i class="bi bi-list-ul fs-4 d-block mb-1"></i>
-          <span class="fw-bold">Historial Ventas</span>
-        </a>
+      <!-- Mensaje motivacional -->
+      <div class="col-12">
+        <div class="card h-100" style="border-left:4px solid #BF5800;">
+          <div class="card-body py-3">
+            <div style="font-size:11px;color:#BF5800;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;"><i class="bi bi-lightning-fill me-1"></i>Mensaje del día</div>
+            <?php
+              $mensajes = [
+                "¡Cada venta cuenta! Sigue así, <?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>.",
+                "La actitud positiva es tu mejor herramienta hoy.",
+                "Un cliente satisfecho regresa siempre. ¡Tú lo logras!",
+                "El trabajo duro de hoy es el éxito de mañana.",
+                "¡Buen turno! Haz que cada cliente se sienta especial.",
+                "La excelencia no es un acto, es un hábito. ¡Tú lo tienes!",
+                "Cada pequeña venta construye el gran resultado del mes.",
+              ];
+              $msg = $mensajes[date('N')-1];
+            ?>
+            <div style="font-size:13px;line-height:1.6;font-style:italic;">"<?= $msg ?>"</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
 </div>
+
+<script>
+// Reloj cajero en tiempo real
+function actualizarReloj() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const relojG = document.getElementById('reloj-grande');
+  const fechaEl = document.getElementById('fecha-cajero');
+  const relojC = document.getElementById('reloj-cajero');
+  if(relojG) relojG.textContent = h+':'+m+':'+s;
+  if(fechaEl) fechaEl.textContent = dias[now.getDay()]+', '+now.getDate()+' de '+meses[now.getMonth()]+' '+now.getFullYear();
+  if(relojC) relojC.textContent = h+':'+m+':'+s;
+}
+actualizarReloj();
+setInterval(actualizarReloj, 1000);
+</script>
+
 <?php endif; ?>
 
 <script>
