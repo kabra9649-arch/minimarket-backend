@@ -101,8 +101,8 @@ $total = $subtotal + $envio;
         <div class="card-body p-0">
           <?php foreach ($items as $item): ?>
           <div class="d-flex align-items-center gap-3 p-3 border-bottom">
-            <?php if ($item['imagen'] && file_exists('uploads/productos/'.$item['imagen'])): ?>
-              <img src="/uploads/productos/<?= htmlspecialchars($item['imagen']) ?>" class="item-img">
+            <?php if ($item['imagen']): ?>
+              <img src="/uploads/productos/<?= htmlspecialchars($item['imagen']) ?>" class="item-img" onerror="this.parentElement.innerHTML='<div class=item-placeholder><i class=bi bi-box-seam></i></div>'">
             <?php else: ?>
               <div class="item-placeholder"><i class="bi bi-box-seam"></i></div>
             <?php endif; ?>

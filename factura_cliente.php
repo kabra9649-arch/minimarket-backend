@@ -64,7 +64,7 @@ $domicilio = $db->query("
   .success-banner{background:linear-gradient(135deg,#0F6E56,#1aad87);color:#fff;padding:14px 20px;border-radius:10px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
   .success-banner i{font-size:28px;}
   @media print {
-    .navbar-top,.btn-imprimir,.btn-nav { display:none!important; }
+    .navbar-top,.btn-nav { display:none!important; }
     body { background:#fff; }
     .content { padding:0; max-width:100%; }
     .factura { box-shadow:none; border-radius:0; }
@@ -76,7 +76,6 @@ $domicilio = $db->query("
 <div class="navbar-top">
   <a href="catalogo.php" class="brand"><i class="bi bi-shop me-2"></i>MiniMarket G2</a>
   <div class="d-flex gap-2">
-    <button onclick="window.print()" class="btn-nav btn-imprimir"><i class="bi bi-printer me-1"></i>Imprimir</button>
     <a href="catalogo.php" class="btn-nav"><i class="bi bi-shop me-1"></i>Seguir comprando</a>
   </div>
 </div>
