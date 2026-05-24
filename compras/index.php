@@ -61,6 +61,7 @@ if (isset($_GET['pagar'])) {
 }
 
 $compras     = $db->query("SELECT c.*,p.nombre AS proveedor,u.nombre AS usuario FROM compras c JOIN proveedores p ON c.proveedor_id=p.id JOIN usuarios u ON c.usuario_id=u.id ORDER BY c.id ASC");
+$totalCompras = $compras->num_rows;
 $proveedores = $db->query("SELECT * FROM proveedores WHERE activo=1 ORDER BY nombre");
 $productos   = $db->query("SELECT id,nombre,precio_compra FROM productos WHERE activo=1 ORDER BY nombre");
 $prods_arr   = [];
@@ -124,7 +125,7 @@ include '../views/layouts/header.php';
 </div>
 
 <div class="card">
-  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-list-ul me-2"></i>Historial de Órdenes</span><input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)"></div>
+  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-list-ul me-2"></i>Historial de Órdenes <span class="badge bg-info text-dark ms-1"><?= $totalCompras ?></span></span><input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)"></div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover table-sm mb-0">

@@ -41,6 +41,7 @@ if (isset($_GET['edit']) && !$esCajero)
     $editProduct = $db->query("SELECT * FROM productos WHERE id=".(int)$_GET['edit'])->fetch_assoc();
 
 $productos   = $db->query("SELECT p.*,c.nombre AS categoria,pr.nombre AS proveedor FROM productos p JOIN categorias c ON p.categoria_id=c.id JOIN proveedores pr ON p.proveedor_id=pr.id WHERE p.activo=1 ORDER BY p.nombre ASC");
+$totalProductos = $productos->num_rows;
 $categorias  = $db->query("SELECT * FROM categorias ORDER BY nombre");
 $proveedores = $db->query("SELECT * FROM proveedores WHERE activo=1 ORDER BY nombre");
 
@@ -115,7 +116,7 @@ include '../views/layouts/header.php';
 
 <div class="card">
   <div class="card-header d-flex align-items-center justify-content-between">
-    <span><i class="bi bi-box-seam me-2"></i><?= $esCajero ? 'Buscar Producto' : 'Listado de Productos' ?></span>
+    <span><i class="bi bi-box-seam me-2"></i><?= $esCajero ? 'Buscar Producto' : 'Listado de Productos' ?> <span class="badge bg-info text-dark ms-1"><?= $totalProductos ?></span></span>
     <input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)">
   </div>
   <div class="card-body p-0">

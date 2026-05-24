@@ -19,6 +19,7 @@ $pedidos = $db->query("
     ORDER BY p.id ASC
     LIMIT 100
 ");
+$totalPedidos = $pedidos->num_rows;
 
 include '../views/layouts/header.php';
 ?>
@@ -33,7 +34,7 @@ include '../views/layouts/header.php';
 </div>
 
 <div class="card">
-  <div class="card-header"><i class="bi bi-list-check me-2"></i>Lista de Pedidos</div>
+  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-list-check me-2"></i>Lista de Pedidos <span class="badge bg-info text-dark ms-1"><?= $totalPedidos ?></span></span></div>
   <div class="card-body p-0">
     <table class="table table-hover table-sm mb-0">
       <thead>

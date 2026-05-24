@@ -34,6 +34,7 @@ if (isset($_GET['edit']))
     $editCat = $db->query("SELECT * FROM categorias WHERE id=".(int)$_GET['edit'])->fetch_assoc();
 
 $categorias = $db->query("SELECT c.*,COUNT(p.id) AS total_productos FROM categorias c LEFT JOIN productos p ON c.id=p.categoria_id AND p.activo=1 GROUP BY c.id ORDER BY c.id ASC");
+$totalCategorias = $categorias->num_rows;
 
 include '../views/layouts/header.php';
 ?>
@@ -65,7 +66,7 @@ include '../views/layouts/header.php';
 </div>
 
 <div class="card">
-  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-tags me-2"></i>Listado de Categorías</span><input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)"></div>
+  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-tags me-2"></i>Listado de Categorías <span class="badge bg-info text-dark ms-1"><?= $totalCategorias ?></span></span><input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)"></div>
   <div class="card-body p-0">
     <table class="table table-hover table-sm mb-0">
       <thead><tr><th>#</th><th>Nombre</th><th>Descripción</th><th>Productos</th><th>Acciones</th></tr></thead>
