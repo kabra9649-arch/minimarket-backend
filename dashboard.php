@@ -344,7 +344,7 @@ include 'views/layouts/header.php';
             <div style="font-size:11px;color:#BF5800;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;"><i class="bi bi-lightning-fill me-1"></i>Mensaje del día</div>
             <?php
               $mensajes = [
-                "¡Cada venta cuenta! Sigue así, <?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>.",
+                "¡Cada venta cuenta! Sigue así, " . htmlspecialchars($_SESSION['nombre'] ?? '') . ".",
                 "La actitud positiva es tu mejor herramienta hoy.",
                 "Un cliente satisfecho regresa siempre. ¡Tú lo logras!",
                 "El trabajo duro de hoy es el éxito de mañana.",
