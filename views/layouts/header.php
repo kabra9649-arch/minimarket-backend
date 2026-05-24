@@ -481,7 +481,8 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
   <div class="topbar">
     <div class="d-flex align-items-center gap-2">
       <button class="mobile-menu-btn" onclick="openSidebar()"><i class="bi bi-list"></i></button>
-      <h5><?= $pageTitle ?? 'Dashboard' ?></h5>
+    <img src="https://res.cloudinary.com/dutvxrjml/image/upload/v1778966199/nexsys_1_f0cpoe.png" style="height:28px;margin-right:4px;" class="d-none d-md-inline">
+    <h5><?= $pageTitle ?? 'Dashboard' ?></h5>
     </div>
     <div class="d-flex align-items-center gap-3">
 

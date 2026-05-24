@@ -1,13 +1,25 @@
-const CACHE = 'minimarket-v1';
+const CACHE = 'nexsys-v2';
 const ASSETS = [
   '/login.php',
   '/dashboard.php',
-  '/uploads/icon-192 .png',
-  '/uploads/icon-512.png'
+  '/uploads/logo.png',
+  '/uploads/icon-192 .png'
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(ASSETS.filter(a => a)))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
