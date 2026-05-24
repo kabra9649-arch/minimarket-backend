@@ -404,19 +404,17 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
       <a href="/dashboard.php" class="<?= basename($self)=='dashboard.php'?'active':'' ?>"><i class="bi bi-speedometer2"></i> Dashboard</a>
 
       <div class="nav-section">Ventas</div>
-      <a href="/ventas/nueva_venta.php" class="<?= basename($self)=='nueva_venta.php'?'active':'' ?>"><i class="bi bi-plus-circle"></i> Nueva Venta</a>
-      <a href="/ventas/index.php" class="<?= basename($self)=='index.php'&&strpos($self,'ventas')!==false?'active':'' ?>"><i class="bi bi-clock-history"></i> Historial Ventas</a>
+      <a href="/ventas/index.php" class="<?= basename($self)=='index.php'&&strpos($self,'ventas')!==false?'active':'' ?>"><i class="bi bi-plus-circle"></i> Nueva Venta</a>
 
       <div class="nav-section">Clientes</div>
       <a href="/clientes/crear.php" class="<?= basename($self)=='crear.php'&&strpos($self,'clientes')!==false?'active':'' ?>"><i class="bi bi-person-plus"></i> Nuevo Cliente</a>
-      <a href="/clientes/index.php" class="<?= basename($self)=='index.php'&&strpos($self,'clientes')!==false?'active':'' ?>"><i class="bi bi-people"></i> Clientes</a>
 
       <div class="nav-section">Inventario</div>
-      <a href="/productos/index.php" class="<?= strpos($self,'productos')!==false?'active':'' ?>"><i class="bi bi-box-seam"></i> Buscar Producto</a>
+      <a href="/productos/index.php?solo_ver=1" class="<?= strpos($self,'productos')!==false?'active':'' ?>"><i class="bi bi-search"></i> Buscar Producto</a>
 
       <div class="nav-section">Mi Turno</div>
       <a href="/ventas/index.php?cajero=<?= $user['id'] ?>" class="<?= '' ?>"><i class="bi bi-person-check"></i> Mis Ventas</a>
-      <a href="/ventas/metodos.php" class="<?= basename($self)=='metodos.php'?'active':'' ?>"><i class="bi bi-credit-card"></i> Métodos de Pago</a>
+      <a href="/ventas/metodos_pago.php" class="<?= basename($self)=='metodos_pago.php'?'active':'' ?>"><i class="bi bi-credit-card"></i> Métodos de Pago</a>
 
     <?php else: ?>
       <div class="nav-section">Principal</div>
