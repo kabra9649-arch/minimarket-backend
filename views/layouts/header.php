@@ -415,9 +415,12 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
 
 <!-- ── SIDEBAR ── -->
 <div class="sidebar" id="sidebar">
-  <div class="sidebar-brand">
-    <h6><img src="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg" style="height:32px;margin-right:8px;vertical-align:middle;">NEXSYS</h6>
-    <small>Sistema de Gestión</small>
+  <div class="sidebar-brand" style="display:flex;align-items:center;gap:12px;">
+    <img src="https://res.cloudinary.com/da6mdp5h1/image/upload/r_max,q_auto,f_auto/v1779593890/nexsys_1_pnai3b.jpg" style="width:44px;height:44px;border-radius:50%;border:2px solid rgba(245,158,11,0.5);flex-shrink:0;">
+    <div>
+      <h6 style="margin:0;color:#fff;font-weight:700;">NEXSYS</h6>
+      <small>Sistema de Gestión</small>
+    </div>
   </div>
   <div class="sidebar-nav">
     <?php $self = $_SERVER['PHP_SELF']; $rol = $user['rol']; ?>
@@ -484,8 +487,6 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
 <div class="main-content">
   <div class="topbar">
     <div class="d-flex align-items-center gap-2">
-      <button class="mobile-menu-btn" onclick="openSidebar()"><i class="bi bi-list"></i></button>
-      <img src="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto,f_auto/v1779593890/nexsys_1_pnai3b.jpg" style="height:32px;margin-right:6px;border-radius:8px;">
       <h5><?= $pageTitle ?? 'Dashboard' ?></h5>
     </div>
     <div class="d-flex align-items-center gap-3">
