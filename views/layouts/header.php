@@ -339,6 +339,8 @@ table thead { background: var(--surface-2); }
 })();
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-worker.js'); }
 </script>
+<link rel="icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
+<link rel="shortcut icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
 </head>
 <body>
 

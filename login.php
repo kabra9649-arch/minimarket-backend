@@ -113,6 +113,8 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @media(max-width:680px){.login-left{display:none;}.login-wrapper{max-width:440px;border-radius:20px;}}
 </style>
+<link rel="icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
+<link rel="shortcut icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
 </head>
 <body>
 <script>(function(){const t=localStorage.getItem('mm-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
