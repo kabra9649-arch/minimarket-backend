@@ -115,6 +115,16 @@ table thead { background: var(--surface-2); }
 [data-theme="dark"] .form-select:focus { background: var(--input-bg); border-color: var(--accent); color: var(--text); box-shadow: 0 0 0 3px rgba(46,117,182,0.2); }
 [data-theme="dark"] .input-group-text { background: var(--input-bg); border-color: var(--border); color: var(--text-muted); }
 [data-theme="dark"] .form-label { color: var(--text) !important; }
+[data-theme="dark"] span,
+[data-theme="dark"] label,
+[data-theme="dark"] .form-label,
+[data-theme="dark"] .form-check-label,
+[data-theme="dark"] .card-body span,
+[data-theme="dark"] .card-body label,
+[data-theme="dark"] th,
+[data-theme="dark"] td,
+[data-theme="dark"] small,
+[data-theme="dark"] p { color: var(--text) !important; }
 [data-theme="dark"] .form-check-label { color: var(--text) !important; }
 [data-theme="dark"] label { color: var(--text) !important; }
 [data-theme="dark"] .card-body label { color: var(--text) !important; }
