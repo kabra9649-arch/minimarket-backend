@@ -329,6 +329,8 @@ table thead { background: var(--surface-2); }
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#1F4E79">
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
+<link rel="apple-touch-icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
 <link rel="apple-touch-icon" href="/uploads/icon-192.png">
 <script>
 (function(){
@@ -412,7 +414,7 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
 <!-- ── SIDEBAR ── -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <h6><img src="https://res.cloudinary.com/dutvxrjml/image/upload/v1778966199/nexsys_1_f0cpoe.png" style="height:32px;margin-right:8px;vertical-align:middle;">NEXSYS</h6>
+    <h6><img src="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg" style="height:32px;margin-right:8px;vertical-align:middle;">NEXSYS</h6>
     <small>Sistema de Gestión</small>
   </div>
   <div class="sidebar-nav">
@@ -481,7 +483,7 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
   <div class="topbar">
     <div class="d-flex align-items-center gap-2">
       <button class="mobile-menu-btn" onclick="openSidebar()"><i class="bi bi-list"></i></button>
-    <img src="https://res.cloudinary.com/dutvxrjml/image/upload/v1778966199/nexsys_1_f0cpoe.png" style="height:28px;margin-right:4px;" class="d-none d-md-inline">
+    <img src="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg" style="height:28px;margin-right:4px;" class="d-none d-md-inline">
     <h5><?= $pageTitle ?? 'Dashboard' ?></h5>
     </div>
     <div class="d-flex align-items-center gap-3">

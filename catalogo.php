@@ -301,7 +301,7 @@ function closeToast(id){const el=document.getElementById(id);if(!el)return;el.st
 
 <!-- NAVBAR -->
 <div class="navbar-top">
-  <a href="catalogo.php?nosplash=1" class="brand"><img src="https://res.cloudinary.com/dutvxrjml/image/upload/v1778966199/nexsys_1_f0cpoe.png" style="height:28px;margin-right:8px;vertical-align:middle;">NEXSYS</a>
+  <a href="catalogo.php?nosplash=1" class="brand"><img src="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg" style="height:28px;margin-right:8px;vertical-align:middle;">NEXSYS</a>
   <div class="d-flex align-items-center gap-3">
     <span class="user-info d-none d-md-inline"><i class="bi bi-person-circle me-1"></i><?= htmlspecialchars($cliente['nombre']) ?></span>
     <a href="carrito.php" class="btn-carrito">
