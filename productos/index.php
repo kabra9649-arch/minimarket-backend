@@ -6,42 +6,48 @@ requireLogin();
 
 $db = getDB();
 $pageTitle = 'Gestión de Productos';
+$user = currentUser();
+$esCajero = $user['rol'] === 'cajero';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'crear') {
-    $fv = !empty($_POST['fecha_vencimiento']) ? $_POST['fecha_vencimiento'] : null;
-    $stmt = $db->prepare("INSERT INTO productos (categoria_id,proveedor_id,nombre,codigo_barras,precio_compra,precio_venta,stock_actual,stock_minimo,fecha_vencimiento) VALUES (?,?,?,?,?,?,?,?,?)");
-    $stmt->bind_param('iissddiis', $_POST['categoria_id'], $_POST['proveedor_id'], $_POST['nombre'], $_POST['codigo_barras'], $_POST['precio_compra'], $_POST['precio_venta'], $_POST['stock_actual'], $_POST['stock_minimo'], $fv);
-    $stmt->execute() ? setToast('success','Producto registrado correctamente.') : setToast('error','Error: '.$db->error);
-    $stmt->close();
-    header('Location: index.php'); exit();
-}
+// Bloquear acciones para cajero
+if (!$esCajero) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'crear') {
+        $fv = !empty($_POST['fecha_vencimiento']) ? $_POST['fecha_vencimiento'] : null;
+        $stmt = $db->prepare("INSERT INTO productos (categoria_id,proveedor_id,nombre,codigo_barras,precio_compra,precio_venta,stock_actual,stock_minimo,fecha_vencimiento) VALUES (?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param('iissddiis', $_POST['categoria_id'], $_POST['proveedor_id'], $_POST['nombre'], $_POST['codigo_barras'], $_POST['precio_compra'], $_POST['precio_venta'], $_POST['stock_actual'], $_POST['stock_minimo'], $fv);
+        $stmt->execute() ? setToast('success','Producto registrado correctamente.') : setToast('error','Error: '.$db->error);
+        $stmt->close();
+        header('Location: index.php'); exit();
+    }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'editar') {
-    $fv = !empty($_POST['fecha_vencimiento']) ? $_POST['fecha_vencimiento'] : null;
-    $stmt = $db->prepare("UPDATE productos SET categoria_id=?,proveedor_id=?,nombre=?,codigo_barras=?,precio_compra=?,precio_venta=?,stock_actual=?,stock_minimo=?,fecha_vencimiento=? WHERE id=?");
-    $stmt->bind_param('iissddiisd', $_POST['categoria_id'], $_POST['proveedor_id'], $_POST['nombre'], $_POST['codigo_barras'], $_POST['precio_compra'], $_POST['precio_venta'], $_POST['stock_actual'], $_POST['stock_minimo'], $fv, $_POST['id']);
-    $stmt->execute() ? setToast('success','Producto actualizado correctamente.') : setToast('error','Error: '.$db->error);
-    $stmt->close();
-    header('Location: index.php'); exit();
-}
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'editar') {
+        $fv = !empty($_POST['fecha_vencimiento']) ? $_POST['fecha_vencimiento'] : null;
+        $stmt = $db->prepare("UPDATE productos SET categoria_id=?,proveedor_id=?,nombre=?,codigo_barras=?,precio_compra=?,precio_venta=?,stock_actual=?,stock_minimo=?,fecha_vencimiento=? WHERE id=?");
+        $stmt->bind_param('iissddiisd', $_POST['categoria_id'], $_POST['proveedor_id'], $_POST['nombre'], $_POST['codigo_barras'], $_POST['precio_compra'], $_POST['precio_venta'], $_POST['stock_actual'], $_POST['stock_minimo'], $fv, $_POST['id']);
+        $stmt->execute() ? setToast('success','Producto actualizado correctamente.') : setToast('error','Error: '.$db->error);
+        $stmt->close();
+        header('Location: index.php'); exit();
+    }
 
-if (isset($_GET['delete'])) {
-    $db->query("UPDATE productos SET activo=0 WHERE id=".(int)$_GET['delete']);
-    setToast('warning','Producto desactivado.');
-    header('Location: index.php'); exit();
+    if (isset($_GET['delete'])) {
+        $db->query("UPDATE productos SET activo=0 WHERE id=".(int)$_GET['delete']);
+        setToast('warning','Producto desactivado.');
+        header('Location: index.php'); exit();
+    }
 }
 
 $editProduct = null;
-if (isset($_GET['edit']))
+if (isset($_GET['edit']) && !$esCajero)
     $editProduct = $db->query("SELECT * FROM productos WHERE id=".(int)$_GET['edit'])->fetch_assoc();
 
-$productos   = $db->query("SELECT p.*,c.nombre AS categoria,pr.nombre AS proveedor FROM productos p JOIN categorias c ON p.categoria_id=c.id JOIN proveedores pr ON p.proveedor_id=pr.id WHERE p.activo=1 ORDER BY p.id ASC");
+$productos   = $db->query("SELECT p.*,c.nombre AS categoria,pr.nombre AS proveedor FROM productos p JOIN categorias c ON p.categoria_id=c.id JOIN proveedores pr ON p.proveedor_id=pr.id WHERE p.activo=1 ORDER BY p.nombre ASC");
 $categorias  = $db->query("SELECT * FROM categorias ORDER BY nombre");
 $proveedores = $db->query("SELECT * FROM proveedores WHERE activo=1 ORDER BY nombre");
 
 include '../views/layouts/header.php';
 ?>
 
+<?php if (!$esCajero): ?>
 <div class="card mb-3">
   <div class="card-header d-flex justify-content-between align-items-center">
     <span><i class="bi bi-<?= $editProduct ? 'pencil' : 'plus-circle' ?> me-2"></i><?= $editProduct ? 'Editar Producto' : 'Nuevo Producto' ?></span>
@@ -105,13 +111,24 @@ include '../views/layouts/header.php';
     </form>
   </div>
 </div>
+<?php endif; ?>
 
 <div class="card">
-  <div class="card-header d-flex align-items-center justify-content-between"><span><i class="bi bi-box-seam me-2"></i>Listado de Productos</span><input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)"></div>
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <span><i class="bi bi-box-seam me-2"></i><?= $esCajero ? 'Buscar Producto' : 'Listado de Productos' ?></span>
+    <input type="text" class="form-control form-control-sm" style="width:200px" placeholder="Buscar..." oninput="filtrar(this.value)">
+  </div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover table-sm mb-0">
-        <thead><tr><th>#</th><th>Nombre</th><th>Categoría</th><th>Proveedor</th><th>P.Compra</th><th>P.Venta</th><th>Stock</th><th>Vencimiento</th><th>Acciones</th></tr></thead>
+        <thead>
+          <tr>
+            <th>#</th><th>Nombre</th><th>Categoría</th>
+            <?php if (!$esCajero): ?><th>Proveedor</th><th>P.Compra</th><?php endif; ?>
+            <th>P.Venta</th><th>Stock</th><th>Vencimiento</th>
+            <?php if (!$esCajero): ?><th>Acciones</th><?php endif; ?>
+          </tr>
+        </thead>
         <tbody>
           <?php while ($p = $productos->fetch_assoc()):
             $sb = $p['stock_actual'] <= $p['stock_minimo'];
@@ -121,8 +138,10 @@ include '../views/layouts/header.php';
             <td class="small"><?= $p['id'] ?></td>
             <td class="small"><strong><?= htmlspecialchars($p['nombre']) ?></strong></td>
             <td><span class="badge bg-secondary" style="font-size:10px"><?= htmlspecialchars($p['categoria']) ?></span></td>
+            <?php if (!$esCajero): ?>
             <td class="small"><?= htmlspecialchars($p['proveedor']) ?></td>
             <td class="small">RD$ <?= number_format($p['precio_compra'],2) ?></td>
+            <?php endif; ?>
             <td class="small">RD$ <?= number_format($p['precio_venta'],2) ?></td>
             <td><span class="badge bg-<?= $sb?'danger':'success' ?>"><?= $p['stock_actual'] ?><?= $sb?' ⚠':'' ?></span></td>
             <td class="small">
@@ -130,10 +149,12 @@ include '../views/layouts/header.php';
                 <span class="badge bg-<?= $pv?'warning text-dark':'light text-dark' ?>"><?= date('d/m/Y',strtotime($p['fecha_vencimiento'])) ?></span>
               <?php else: ?>—<?php endif; ?>
             </td>
+            <?php if (!$esCajero): ?>
             <td>
               <a href="?edit=<?= $p['id'] ?>" class="btn btn-sm btn-outline-primary py-0 px-2"><i class="bi bi-pencil"></i></a>
               <a href="?delete=<?= $p['id'] ?>" class="btn btn-sm btn-outline-danger py-0 px-2" onclick="return confirmar(event,this.href,'¿Desactivar este producto?')"><i class="bi bi-trash"></i></a>
             </td>
+            <?php endif; ?>
           </tr>
           <?php endwhile; ?>
         </tbody>
@@ -143,6 +164,13 @@ include '../views/layouts/header.php';
 </div>
 
 <script>
+function filtrar(q){
+  q=q.toLowerCase();
+  document.querySelectorAll('tbody tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
+  });
+}
+<?php if (!$esCajero): ?>
 function confirmar(e,url,msg) {
     e.preventDefault();
     const div=document.createElement('div');
@@ -158,6 +186,7 @@ function confirmar(e,url,msg) {
     document.body.appendChild(div);
     return false;
 }
+<?php endif; ?>
 </script>
 
 <?php include '../views/layouts/footer.php'; ?>

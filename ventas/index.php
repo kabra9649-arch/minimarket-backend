@@ -69,13 +69,20 @@ $clientes  = $db->query("SELECT id,nombre FROM clientes ORDER BY nombre");
 $prods_arr = [];
 while ($p = $productos->fetch_assoc()) $prods_arr[] = $p;
 
-// Historial solo para admin/gerente
+// Historial: admin/gerente ven todas, cajero ve solo las suyas
 $ventas = null;
-if (!$esCajero) {
+if ($esCajero) {
+    $cajero_id = (int)$_SESSION['usuario_id'];
     $ventas = $db->query("SELECT v.*,u.nombre AS cajero,c.nombre AS cliente FROM ventas v
         JOIN usuarios u ON v.usuario_id=u.id
         LEFT JOIN clientes c ON v.cliente_id=c.id
-        ORDER BY v.id ASC LIMIT 50");
+        WHERE v.usuario_id=$cajero_id
+        ORDER BY v.id DESC LIMIT 50");
+} else {
+    $ventas = $db->query("SELECT v.*,u.nombre AS cajero,c.nombre AS cliente FROM ventas v
+        JOIN usuarios u ON v.usuario_id=u.id
+        LEFT JOIN clientes c ON v.cliente_id=c.id
+        ORDER BY v.id DESC LIMIT 50");
 }
 
 include '../views/layouts/header.php';
@@ -146,21 +153,26 @@ include '../views/layouts/header.php';
   </div>
 </div>
 
-<?php if (!$esCajero && $ventas): ?>
-<!-- HISTORIAL - solo admin/gerente -->
+<!-- HISTORIAL -->
+<?php if ($ventas): ?>
 <div class="card">
-  <div class="card-header"><i class="bi bi-receipt me-2"></i>Últimas 50 ventas</div>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-receipt me-2"></i><?= $esCajero ? 'Mis Ventas' : 'Últimas 50 ventas' ?></span>
+    <?php if ($esCajero): ?>
+    <span class="badge bg-info text-dark">Solo tus ventas</span>
+    <?php endif; ?>
+  </div>
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-hover table-sm mb-0">
         <thead>
-          <tr><th>Factura</th><th>Cajero</th><th>Cliente</th><th>Total</th><th>Método</th><th>Fecha</th><th>Estado</th><th>Acción</th></tr>
+          <tr><th>Factura</th><?= !$esCajero ? '<th>Cajero</th>' : '' ?><th>Cliente</th><th>Total</th><th>Método</th><th>Fecha</th><th>Estado</th><th>Acción</th></tr>
         </thead>
         <tbody>
           <?php while ($v = $ventas->fetch_assoc()): ?>
           <tr>
             <td class="small"><strong><?= $v['num_factura'] ?></strong></td>
-            <td class="small"><?= htmlspecialchars($v['cajero']) ?></td>
+            <?php if (!$esCajero): ?><td class="small"><?= htmlspecialchars($v['cajero']) ?></td><?php endif; ?>
             <td class="small"><?= htmlspecialchars($v['cliente'] ?? 'General') ?></td>
             <td class="small">RD$ <?= number_format($v['total'],2) ?></td>
             <td class="small"><?= ucfirst($v['metodo_pago']) ?></td>
@@ -168,7 +180,7 @@ include '../views/layouts/header.php';
             <td><span class="badge bg-<?= $v['estado']==='completada'?'success':'danger' ?>"><?= ucfirst($v['estado']) ?></span></td>
             <td class="d-flex gap-1">
               <a href="factura.php?id=<?= $v['id'] ?>" class="btn btn-outline-primary btn-sm py-0 px-2" target="_blank"><i class="bi bi-printer"></i></a>
-              <?php if ($v['estado'] === 'completada'): ?>
+              <?php if (!$esCajero && $v['estado'] === 'completada'): ?>
               <a href="?anular=<?= $v['id'] ?>" class="btn btn-outline-danger btn-sm py-0 px-2"
                  onclick="return confirm('¿Anular esta venta?')"><i class="bi bi-x-circle"></i></a>
               <?php endif; ?>

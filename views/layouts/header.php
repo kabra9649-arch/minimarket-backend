@@ -430,7 +430,7 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
       <a href="/ventas/index.php" class="<?= basename($self)=='index.php'&&strpos($self,'ventas')!==false?'active':'' ?>"><i class="bi bi-plus-circle"></i> Nueva Venta</a>
 
       <div class="nav-section">Clientes</div>
-      <a href="/clientes/crear.php" class="<?= basename($self)=='crear.php'&&strpos($self,'clientes')!==false?'active':'' ?>"><i class="bi bi-person-plus"></i> Nuevo Cliente</a>
+      <a href="/clientes/index.php" class="<?= basename($self)=='index.php'&&strpos($self,'clientes')!==false?'active':'' ?>"><i class="bi bi-person-plus"></i> Nuevo Cliente</a>
 
       <div class="nav-section">Inventario</div>
       <a href="/productos/index.php?solo_ver=1" class="<?= strpos($self,'productos')!==false?'active':'' ?>"><i class="bi bi-search"></i> Buscar Producto</a>
