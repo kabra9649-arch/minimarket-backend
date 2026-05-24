@@ -64,45 +64,45 @@ include 'views/layouts/header.php';
 
 <!-- TARJETAS -->
 <?php if ($_SESSION['rol'] !== 'cajero'): ?>
-<div class="row g-2 mb-3">
-  <div class="col-6 col-md-3">
-    <div class="card text-white h-100" style="background:#1F4E79;">
-      <div class="card-body py-3 d-flex justify-content-between align-items-center">
-        <div><div class="small opacity-75">Ventas hoy</div><div class="fs-4 fw-bold"><?= $ventasHoy['total'] ?></div></div>
-        <i class="bi bi-receipt fs-2 opacity-40"></i>
+<div class="row g-2 mb-2">
+  <div class="col">
+    <div class="card text-white" style="background:#1F4E79;">
+      <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+        <div><div style="font-size:10px;opacity:.75">Ventas hoy</div><div class="fw-bold" style="font-size:18px"><?= $ventasHoy['total'] ?></div></div>
+        <i class="bi bi-receipt opacity-30" style="font-size:20px"></i>
       </div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="card text-white h-100" style="background:#0F6E56;">
-      <div class="card-body py-3 d-flex justify-content-between align-items-center">
-        <div><div class="small opacity-75">Ingresos hoy</div><div class="fw-bold" style="font-size:clamp(13px,3vw,18px)">RD$ <?= number_format($ventasHoy['ingresos'],0) ?></div></div>
-        <i class="bi bi-cash-stack fs-2 opacity-40"></i>
+  <div class="col">
+    <div class="card text-white" style="background:#0F6E56;">
+      <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+        <div><div style="font-size:10px;opacity:.75">Ingresos hoy</div><div class="fw-bold" style="font-size:14px">RD$ <?= number_format($ventasHoy['ingresos'],0) ?></div></div>
+        <i class="bi bi-cash-stack opacity-30" style="font-size:20px"></i>
       </div>
     </div>
   </div>
   <?php if (true): // always show rest for admin ?>
-  <div class="col-6 col-md-3">
-    <div class="card text-white h-100" style="background:linear-gradient(135deg,#BF5800,#e07020);">
-      <div class="card-body py-3 d-flex justify-content-between align-items-center">
-        <div><div class="small opacity-75">Ticket promedio</div><div class="fw-bold" style="font-size:clamp(13px,3vw,18px)">RD$ <?= number_format($ticketPromedio,2) ?></div></div>
-        <i class="bi bi-graph-up fs-2 opacity-40"></i>
+  <div class="col">
+    <div class="card text-white" style="background:linear-gradient(135deg,#BF5800,#e07020);">
+      <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+        <div><div style="font-size:10px;opacity:.75">Ticket promedio</div><div class="fw-bold" style="font-size:14px">RD$ <?= number_format($ticketPromedio,2) ?></div></div>
+        <i class="bi bi-graph-up opacity-30" style="font-size:20px"></i>
       </div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="card text-white h-100" style="background:<?= $stockBajo['total']>0?'#C00000':'#555' ?>;">
-      <div class="card-body py-3 d-flex justify-content-between align-items-center">
-        <div><div class="small opacity-75">Stock bajo</div><div class="fs-4 fw-bold"><?= $stockBajo['total'] ?></div></div>
-        <i class="bi bi-exclamation-triangle fs-2 opacity-40"></i>
+  <div class="col">
+    <div class="card text-white" style="background:<?= $stockBajo['total']>0?'#C00000':'#555' ?>;">
+      <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+        <div><div style="font-size:10px;opacity:.75">Stock bajo</div><div class="fw-bold" style="font-size:18px"><?= $stockBajo['total'] ?></div></div>
+        <i class="bi bi-exclamation-triangle opacity-30" style="font-size:20px"></i>
       </div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="card text-white h-100" style="background:#5B4FCF;">
-      <div class="card-body py-3 d-flex justify-content-between align-items-center">
-        <div><div class="small opacity-75">Pedidos hoy</div><div class="fs-4 fw-bold"><?= $pedHoy['total'] ?></div></div>
-        <i class="bi bi-bag-check fs-2 opacity-40"></i>
+  <div class="col">
+    <div class="card text-white" style="background:#5B4FCF;">
+      <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+        <div><div style="font-size:10px;opacity:.75">Pedidos hoy</div><div class="fw-bold" style="font-size:18px"><?= $pedHoy['total'] ?></div></div>
+        <i class="bi bi-bag-check opacity-30" style="font-size:20px"></i>
       </div>
     </div>
   </div>
