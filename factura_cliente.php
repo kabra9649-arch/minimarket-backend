@@ -74,9 +74,9 @@ $domicilio = $db->query("
 <body>
 
 <div class="navbar-top">
-  <a href="catalogo.php" class="brand"><i class="bi bi-shop me-2"></i>MiniMarket G2</a>
+  <a href="catalogo.php?nosplash=1" class="brand"><i class="bi bi-shop me-2"></i>MiniMarket G2</a>
   <div class="d-flex gap-2">
-    <a href="catalogo.php" class="btn-nav"><i class="bi bi-shop me-1"></i>Seguir comprando</a>
+    <a href="catalogo.php?nosplash=1" class="btn-nav"><i class="bi bi-shop me-1"></i>Seguir comprando</a>
   </div>
 </div>
 

@@ -102,7 +102,7 @@ $total = $subtotal + $envio;
           <?php foreach ($items as $item): ?>
           <div class="d-flex align-items-center gap-3 p-3 border-bottom">
             <?php if ($item['imagen']): ?>
-              <img src="/uploads/productos/<?= htmlspecialchars($item['imagen']) ?>" class="item-img" onerror="this.parentElement.innerHTML='<div class=item-placeholder><i class=bi bi-box-seam></i></div>'">
+              <img src="https://minimarket-backend-production-987b.up.railway.app/uploads/productos/<?= htmlspecialchars($item['imagen']) ?>" class="item-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class='item-placeholder' style='display:none'><i class='bi bi-box-seam'></i></div>
             <?php else: ?>
               <div class="item-placeholder"><i class="bi bi-box-seam"></i></div>
             <?php endif; ?>
