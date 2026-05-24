@@ -28,6 +28,11 @@ while ($r = $mv->fetch_assoc()) {
 if (empty($dataV)) { $labelsV=['Sin ventas']; $dataV=[1]; }
 
 $metodos = ['efectivo'=>0,'tarjeta'=>0,'transferencia'=>0];
+
+// Ingresos por mes (año actual)
+$meses = array_fill(1, 12, 0);
+$rm2 = $db->query("SELECT MONTH(fecha) AS mes, IFNULL(SUM(total),0) AS total FROM ventas WHERE YEAR(fecha)=YEAR(CURDATE()) AND estado='completada' GROUP BY MONTH(fecha)");
+while ($r = $rm2->fetch_assoc()) $meses[(int)$r['mes']] = (float)$r['total'];
 $rm = $db->query("SELECT metodo_pago, COUNT(*) AS cnt FROM ventas WHERE DATE(fecha)>=DATE_SUB(CURDATE(),INTERVAL 30 DAY) AND estado='completada' GROUP BY metodo_pago");
 while ($r = $rm->fetch_assoc()) $metodos[$r['metodo_pago']] = (int)$r['cnt'];
 
@@ -66,6 +71,7 @@ include 'views/layouts/header.php';
       </div>
     </div>
   </div>
+  <?php if ($_SESSION['rol'] !== 'cajero'): ?>
   <div class="col-6 col-md-3">
     <div class="card text-white h-100" style="background:<?= $stockBajo['total']>0?'#C00000':'#555' ?>;">
       <div class="card-body py-3 d-flex justify-content-between align-items-center">
@@ -82,6 +88,7 @@ include 'views/layouts/header.php';
       </div>
     </div>
   </div>
+  <?php endif; ?>
 </div>
 
 <!-- GRÁFICOS -->
@@ -115,7 +122,25 @@ include 'views/layouts/header.php';
   </div>
 </div>
 
+<!-- HISTOGRAMA INGRESOS POR MES -->
+<?php if ($_SESSION['rol'] !== 'cajero'): ?>
+<div class="row g-2 mb-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-graph-up-arrow me-2"></i>Ingresos por Mes <?= date('Y') ?></span>
+        <span class="badge bg-light text-dark" style="font-size:10px;">Actualización en tiempo real</span>
+      </div>
+      <div class="card-body py-2">
+        <div style="position:relative;height:220px;"><canvas id="grafMeses"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
 <!-- ALERTAS -->
+<?php if ($_SESSION['rol'] !== 'cajero'): ?>
 <div class="row g-2">
   <div class="col-12 col-md-6">
     <div class="card">
@@ -162,6 +187,8 @@ include 'views/layouts/header.php';
     </div>
   </div>
 </div>
+
+<?php endif; ?>
 
 <script>
 const initLabels7  = <?= json_encode(array_keys($data7)) ?>;
@@ -210,6 +237,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Histograma ingresos por mes
+    const mesesLabels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const mesesData   = <?= json_encode(array_values($meses)) ?>;
+
+    new Chart(document.getElementById('grafMeses'), {
+        type: 'bar',
+        data: {
+            labels: mesesLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Ingresos RD$',
+                    data: mesesData,
+                    backgroundColor: 'rgba(46,117,182,0.7)',
+                    borderColor: '#2E75B6',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    order: 2
+                },
+                {
+                    type: 'line',
+                    label: 'Tendencia',
+                    data: mesesData,
+                    borderColor: '#BF5800',
+                    backgroundColor: 'rgba(191,88,0,0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#BF5800',
+                    pointRadius: 4,
+                    tension: 0.4,
+                    fill: true,
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 14 } },
+                tooltip: {
+                    callbacks: {
+                        label: c => 'RD$ ' + c.parsed.y.toLocaleString('es-DO', { minimumFractionDigits: 2 })
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { font: { size: 10 }, callback: v => 'RD$ ' + v.toLocaleString() }
+                },
+                x: { ticks: { font: { size: 11 } } }
+            }
+        }
+    });
+
     actualizarHora();
     setInterval(autoRefresh, 60000);
 });
@@ -232,7 +315,63 @@ function autoRefresh() {
             chartTop.update('none');
             chartMetodos.data.datasets[0].data = d.metodos;
             chartMetodos.update('none');
-            actualizarHora();
+            // Histograma ingresos por mes
+    const mesesLabels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const mesesData   = <?= json_encode(array_values($meses)) ?>;
+
+    new Chart(document.getElementById('grafMeses'), {
+        type: 'bar',
+        data: {
+            labels: mesesLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Ingresos RD$',
+                    data: mesesData,
+                    backgroundColor: 'rgba(46,117,182,0.7)',
+                    borderColor: '#2E75B6',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    order: 2
+                },
+                {
+                    type: 'line',
+                    label: 'Tendencia',
+                    data: mesesData,
+                    borderColor: '#BF5800',
+                    backgroundColor: 'rgba(191,88,0,0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#BF5800',
+                    pointRadius: 4,
+                    tension: 0.4,
+                    fill: true,
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 14 } },
+                tooltip: {
+                    callbacks: {
+                        label: c => 'RD$ ' + c.parsed.y.toLocaleString('es-DO', { minimumFractionDigits: 2 })
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { font: { size: 10 }, callback: v => 'RD$ ' + v.toLocaleString() }
+                },
+                x: { ticks: { font: { size: 11 } } }
+            }
+        }
+    });
+
+    actualizarHora();
         })
         .catch(() => {});
 }
