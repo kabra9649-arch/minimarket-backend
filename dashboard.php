@@ -36,6 +36,11 @@ while ($r = $rm2->fetch_assoc()) $meses[(int)$r['mes']] = (float)$r['total'];
 $rm = $db->query("SELECT metodo_pago, COUNT(*) AS cnt FROM ventas WHERE DATE(fecha)>=DATE_SUB(CURDATE(),INTERVAL 30 DAY) AND estado='completada' GROUP BY metodo_pago");
 while ($r = $rm->fetch_assoc()) $metodos[$r['metodo_pago']] = (int)$r['cnt'];
 
+// Queries para cajero
+$cajero_id = $_SESSION['usuario_id'] ?? 0;
+$ultimaVenta = $db->query("SELECT v.id, v.num_factura, v.total, v.metodo_pago, v.fecha, c.nombre AS cliente FROM ventas v LEFT JOIN clientes c ON v.cliente_id=c.id WHERE v.usuario_id=$cajero_id AND v.estado='completada' ORDER BY v.fecha DESC LIMIT 1")->fetch_assoc();
+$topHoy = $db->query("SELECT p.nombre, SUM(dv.cantidad) AS qty, SUM(dv.subtotal) AS sub FROM detalle_ventas dv JOIN productos p ON dv.producto_id=p.id JOIN ventas v ON dv.venta_id=v.id WHERE DATE(v.fecha)=CURDATE() AND v.estado='completada' GROUP BY p.id ORDER BY qty DESC LIMIT 5");
+
 include 'views/layouts/header.php';
 ?>
 
@@ -188,6 +193,105 @@ include 'views/layouts/header.php';
   </div>
 </div>
 
+<?php endif; ?>
+
+<!-- SECCIÓN CAJERO -->
+<?php if ($_SESSION['rol'] === 'cajero'): ?>
+<div class="row g-2 mb-3">
+
+  <!-- Última venta -->
+  <div class="col-12 col-md-4">
+    <div class="card h-100">
+      <div class="card-header py-2 text-white" style="background:#1F4E79;">
+        <i class="bi bi-receipt me-2"></i>Última Venta Realizada
+      </div>
+      <div class="card-body">
+        <?php if ($ultimaVenta): ?>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Factura</span>
+            <span class="fw-bold small"><?= htmlspecialchars($ultimaVenta['num_factura']) ?></span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Cliente</span>
+            <span class="small"><?= htmlspecialchars($ultimaVenta['cliente'] ?? 'General') ?></span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Hora</span>
+            <span class="small"><?= date('h:i A', strtotime($ultimaVenta['fecha'])) ?></span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Método</span>
+            <span class="badge bg-success"><?= ucfirst($ultimaVenta['metodo_pago']) ?></span>
+          </div>
+          <hr class="my-2">
+          <div class="d-flex justify-content-between">
+            <span class="fw-bold">Total</span>
+            <span class="fw-bold" style="color:#2E75B6;font-size:18px;">RD$ <?= number_format($ultimaVenta['total'],2) ?></span>
+          </div>
+          <a href="ventas/factura.php?id=<?= $ultimaVenta['id'] ?>" target="_blank" class="btn btn-sm btn-outline-primary w-100 mt-3">
+            <i class="bi bi-printer me-1"></i>Ver Factura
+          </a>
+        <?php else: ?>
+          <div class="text-center text-muted py-4">
+            <i class="bi bi-receipt fs-1 d-block mb-2 opacity-25"></i>
+            <small>No hay ventas hoy</small>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top productos hoy -->
+  <div class="col-12 col-md-4">
+    <div class="card h-100">
+      <div class="card-header py-2 text-white" style="background:#0F6E56;">
+        <i class="bi bi-star me-2"></i>Más Vendidos Hoy
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>#</th><th>Producto</th><th class="text-end">Cant</th><th class="text-end">RD$</th></tr></thead>
+          <tbody>
+            <?php $rank=0; while($tp=$topHoy->fetch_assoc()): $rank++; ?>
+            <tr>
+              <td><span class="badge" style="background:#1F4E79;"><?= $rank ?></span></td>
+              <td class="small"><?= htmlspecialchars(substr($tp['nombre'],0,18)) ?><?= strlen($tp['nombre'])>18?'…':'' ?></td>
+              <td class="text-end small"><?= $tp['qty'] ?></td>
+              <td class="text-end small"><?= number_format($tp['sub'],0) ?></td>
+            </tr>
+            <?php endwhile; ?>
+            <?php if($rank===0): ?>
+            <tr><td colspan="4" class="text-center text-muted py-3 small">Sin ventas hoy</td></tr>
+            <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acceso rápido -->
+  <div class="col-12 col-md-4">
+    <div class="card h-100">
+      <div class="card-header py-2 text-white" style="background:#5B4FCF;">
+        <i class="bi bi-lightning me-2"></i>Acceso Rápido
+      </div>
+      <div class="card-body d-flex flex-column gap-3 justify-content-center">
+        <a href="ventas/nueva_venta.php" class="btn btn-lg w-100 text-white" style="background:linear-gradient(135deg,#1F4E79,#2E75B6);padding:18px;">
+          <i class="bi bi-plus-circle fs-4 d-block mb-1"></i>
+          <span class="fw-bold">Nueva Venta</span>
+        </a>
+        <a href="clientes/index.php" class="btn btn-lg w-100 text-white" style="background:linear-gradient(135deg,#0F6E56,#1a9e7a);padding:18px;">
+          <i class="bi bi-people fs-4 d-block mb-1"></i>
+          <span class="fw-bold">Ver Clientes</span>
+        </a>
+        <a href="ventas/index.php" class="btn btn-lg w-100 text-white" style="background:linear-gradient(135deg,#5B4FCF,#7a6de0);padding:18px;">
+          <i class="bi bi-list-ul fs-4 d-block mb-1"></i>
+          <span class="fw-bold">Historial Ventas</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
 <?php endif; ?>
 
 <script>
