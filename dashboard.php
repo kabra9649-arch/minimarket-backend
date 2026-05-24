@@ -268,18 +268,7 @@ include 'views/layouts/header.php';
       </div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="card text-white h-100" style="background:#5B4FCF;">
-      <div class="card-body py-3 d-flex justify-content-between align-items-center">
-        <div>
-          <div class="small opacity-75">Stock bajo</div>
-          <div class="fs-4 fw-bold"><?= $stockBajo['total'] ?></div>
-          <div style="font-size:10px;opacity:.7;">productos</div>
-        </div>
-        <i class="bi bi-exclamation-triangle fs-2 opacity-40"></i>
-      </div>
-    </div>
-  </div>
+
 </div>
 
 <!-- Más vendidos hoy (cajero) -->
@@ -355,7 +344,7 @@ include 'views/layouts/header.php';
             <div style="font-size:11px;color:#BF5800;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;"><i class="bi bi-lightning-fill me-1"></i>Mensaje del día</div>
             <?php
               $mensajes = [
-                "¡Cada venta cuenta! Sigue así, " . htmlspecialchars($_SESSION['nombre'] ?? '') . ".",
+                "¡Cada venta cuenta! Sigue así, <?= htmlspecialchars($_SESSION['nombre'] ?? '') ?>.",
                 "La actitud positiva es tu mejor herramienta hoy.",
                 "Un cliente satisfecho regresa siempre. ¡Tú lo logras!",
                 "El trabajo duro de hoy es el éxito de mañana.",
