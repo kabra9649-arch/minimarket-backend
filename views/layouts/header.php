@@ -114,7 +114,16 @@ table thead { background: var(--surface-2); }
 [data-theme="dark"] .form-control:focus,
 [data-theme="dark"] .form-select:focus { background: var(--input-bg); border-color: var(--accent); color: var(--text); box-shadow: 0 0 0 3px rgba(46,117,182,0.2); }
 [data-theme="dark"] .input-group-text { background: var(--input-bg); border-color: var(--border); color: var(--text-muted); }
-[data-theme="dark"] .form-label { color: var(--text); }
+[data-theme="dark"] .form-label { color: var(--text) !important; }
+[data-theme="dark"] .form-check-label { color: var(--text) !important; }
+[data-theme="dark"] label { color: var(--text) !important; }
+[data-theme="dark"] .card-body label { color: var(--text) !important; }
+[data-theme="dark"] th { color: var(--text) !important; }
+[data-theme="dark"] td { color: var(--text) !important; }
+[data-theme="dark"] .table thead { background: var(--surface-2) !important; color: var(--text) !important; }
+[data-theme="dark"] select option { background: var(--surface-2); color: var(--text); }
+[data-theme="dark"] .form-control::placeholder { color: var(--text-muted) !important; }
+[data-theme="dark"] .nav-section { color: rgba(255,255,255,0.4) !important; }
 
 /* ── TEXT ── */
 [data-theme="dark"] .text-muted { color: var(--text-muted) !important; }

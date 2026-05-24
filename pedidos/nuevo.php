@@ -68,8 +68,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $st2->execute(); $st2->close();
         }
 
-header("Location: ver.php?id=$pedido_id&ok=1");
-exit();
+// Enviar correo al cliente si tiene email
+        if ($cliente_id) {
+            $cli = $db->query("SELECT nombre, email FROM clientes WHERE id=$cliente_id")->fetch_assoc();
+            if (!empty($cli["email"])) {
+                $n8nUrl  = "https://n8n-production-91d2.up.railway.app/webhook/pedido_nuevo";
+                $payload = json_encode([
+                    "num_pedido" => $num,
+                    "cliente"    => $cli["nombre"],
+                    "email"      => $cli["email"],
+                    "estado"     => "recibido",
+                    "total"      => number_format($total, 2),
+                    "tipo"       => $tipo
+                ]);
+                $ch = curl_init($n8nUrl);
+                curl_setopt_array($ch, [
+                    CURLOPT_POST           => true,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_TIMEOUT        => 10,
+                    CURLOPT_HTTPHEADER     => ["Content-Type: application/json"],
+                    CURLOPT_POSTFIELDS     => $payload
+                ]);
+                curl_exec($ch);
+                curl_close($ch);
+            }
+        }
+        header("Location: ver.php?id=$pedido_id&ok=1");
+        exit();
 
     }
 }
