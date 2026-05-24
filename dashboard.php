@@ -63,6 +63,7 @@ include 'views/layouts/header.php';
 </style>
 
 <!-- TARJETAS -->
+<?php if ($_SESSION['rol'] !== 'cajero'): ?>
 <div class="row g-2 mb-3">
   <div class="col-6 col-md-3">
     <div class="card text-white h-100" style="background:#1F4E79;">
@@ -80,7 +81,7 @@ include 'views/layouts/header.php';
       </div>
     </div>
   </div>
-  <?php if ($_SESSION['rol'] !== 'cajero'): ?>
+  <?php if (true): // always show rest for admin ?>
   <div class="col-6 col-md-3">
     <div class="card text-white h-100" style="background:linear-gradient(135deg,#BF5800,#e07020);">
       <div class="card-body py-3 d-flex justify-content-between align-items-center">
@@ -107,8 +108,10 @@ include 'views/layouts/header.php';
   </div>
   <?php endif; ?>
 </div>
+<?php endif; // end hide for cajero ?>
 
 <!-- GRÁFICOS -->
+<?php if ($_SESSION['rol'] !== 'cajero'): ?>
 <div class="row g-2 mb-3">
   <div class="col-12 col-md-5">
     <div class="card h-100">
@@ -138,6 +141,7 @@ include 'views/layouts/header.php';
     </div>
   </div>
 </div>
+<?php endif; // end graficos for admin ?>
 
 <!-- HISTOGRAMA INGRESOS POR MES -->
 <?php if ($_SESSION['rol'] !== 'cajero'): ?>
@@ -221,10 +225,10 @@ include 'views/layouts/header.php';
           <div style="font-size:12px;opacity:.7;margin-top:2px;"><i class="bi bi-clock me-1"></i><span id="reloj-cajero"></span></div>
         </div>
         <div class="d-flex gap-2">
-          <a href="ventas/nueva_venta.php" class="btn text-white fw-bold px-4" style="background:rgba(255,255,255,.2);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.3);">
+          <a href="/ventas/index.php" class="btn text-white fw-bold px-4" style="background:rgba(255,255,255,.2);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.3);">
             <i class="bi bi-plus-circle me-2"></i>Nueva Venta
           </a>
-          <a href="clientes/crear.php" class="btn text-white fw-bold px-4" style="background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.2);">
+          <a href="/clientes/index.php" class="btn text-white fw-bold px-4" style="background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.2);">
             <i class="bi bi-person-plus me-2"></i>Nuevo Cliente
           </a>
         </div>
