@@ -389,7 +389,7 @@ include 'views/layouts/header.php';
             <?php if(empty($topHoyArr)): ?>
             <tr><td colspan="5" class="text-center text-muted py-4">
               <i class="bi bi-bar-chart fs-2 d-block mb-2 opacity-25"></i>
-              Sin ventas registradas hoy
+              Sin ventas registradas Hoy
             </td></tr>
             <?php endif; ?>
           </tbody>
