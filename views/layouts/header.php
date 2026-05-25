@@ -148,6 +148,14 @@ table thead { background: var(--surface-2); }
 
 /* ── BADGES ── */
 [data-theme="dark"] .badge.bg-light { background: var(--surface-2) !important; color: var(--text) !important; }
+[data-theme="dark"] .card.text-white .small,
+[data-theme="dark"] .card.text-white .opacity-75,
+[data-theme="dark"] .card.text-white div,
+[data-theme="dark"] .card.text-white span { color: #fff !important; }
+[data-theme="dark"] .grafico-container canvas { filter: brightness(0.95); }
+[data-theme="dark"] .modal-desc { color: #94a3b8 !important; }
+[data-theme="dark"] #reloj-grande { color: #60a5fa !important; }
+[data-theme="dark"] #fecha-cajero { color: #94a3b8 !important; }
 [data-theme="dark"] .badge.bg-secondary { background: #1e3a52 !important; }
 
 /* ── MODALS ── */
@@ -462,7 +470,15 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
       <a href="/reportes/inventario.php" class="<?= strpos($self,'inventario')!==false?'active':'' ?>"><i class="bi bi-clipboard-data"></i> Reporte Inventario</a>
       <a href="/alertas/index.php" class="<?= strpos($self,'alertas')!==false?'active':'' ?>"><i class="bi bi-bell"></i> Alertas</a>
       <div class="nav-section">Comunicación</div>
-      <a href="/whatsapp/whatsapp.php" class="<?= strpos($self,'whatsapp')!==false?'active':'' ?>"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+      <a href="/whatsapp/whatsapp.php" class="<?= strpos($self,'whatsapp')!==false?'active':'' ?>">
+        <i class="bi bi-whatsapp"></i> WhatsApp
+        <?php
+        $db_wa = getDB();
+        $no_leidas_wa = $db_wa->query("SELECT COUNT(*) AS t FROM alertas_whatsapp WHERE leido=0")->fetch_assoc()['t'];
+        if ($no_leidas_wa > 0): ?>
+          <span class="badge bg-success ms-auto" style="font-size:10px"><?= $no_leidas_wa ?></span>
+        <?php endif; ?>
+      </a>
       <a href="/mensajes/index.php" class="<?= strpos($self,'mensajes')!==false?'active':'' ?>">
         <i class="bi bi-chat-dots"></i> Mensajes
         <?php

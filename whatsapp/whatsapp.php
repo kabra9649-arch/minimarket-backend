@@ -251,7 +251,7 @@ include '../views/layouts/header.php';
             </div>
 
             <div class="wa-time">
-                <?= date('h:i a', strtotime($a['fecha'])) ?>
+                <?= date('H:i', strtotime($a['fecha'])) ?>
                 <?php if ($a['leido']): ?>
                     <span class="check">✓✓</span>
                 <?php else: ?>

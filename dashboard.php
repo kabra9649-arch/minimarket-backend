@@ -60,6 +60,11 @@ include 'views/layouts/header.php';
   .table td, .table th { font-size: 11px !important; padding: 6px 8px !important; }
 }
 .grafico-container { position: relative; height: 190px; }
+[data-theme="dark"] .card-header { color: var(--text) !important; }
+[data-theme="dark"] .modal-desc { color: #94a3b8 !important; }
+[data-theme="dark"] #reloj-grande { color: #60a5fa !important; }
+[data-theme="dark"] #fecha-cajero { color: #94a3b8 !important; }
+[data-theme="dark"] .card:not([style*="background"]) .small { color: var(--text-muted) !important; }
 </style>
 
 <!-- TARJETAS -->
