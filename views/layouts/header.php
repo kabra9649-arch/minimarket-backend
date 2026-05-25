@@ -349,8 +349,70 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
 </script>
 <link rel="icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
 <link rel="shortcut icon" href="https://res.cloudinary.com/da6mdp5h1/image/upload/q_auto/f_auto/v1779593890/nexsys_1_pnai3b.jpg">
+
+<style>
+#nexsys-offline {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: linear-gradient(135deg, #06101f 0%, #0d2340 60%, #1a3a5c 100%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  padding: 40px;
+}
+#nexsys-offline.show { display: flex; }
+.nof-icon {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: rgba(239,68,68,0.12);
+  border: 2px solid rgba(239,68,68,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  animation: nofPulse 2.5s ease-in-out infinite;
+}
+@keyframes nofPulse {
+  0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.3)}
+  50%{box-shadow:0 0 0 20px rgba(239,68,68,0)}
+}
+.nof-logo { font-size:30px; font-weight:800; color:#fff; letter-spacing:5px; }
+.nof-logo span { color:#F59E0B; }
+.nof-badge {
+  background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3);
+  color:#EF4444; padding:5px 18px; border-radius:20px;
+  font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+}
+.nof-title { font-size:22px; font-weight:700; color:#fff; margin:0; }
+.nof-sub { color:rgba(255,255,255,0.45); font-size:13px; max-width:360px; line-height:1.7; margin:0; }
+.nof-divider { width:60px; height:2px; background:rgba(46,117,182,0.4); border-radius:2px; }
+.nof-retry {
+  background:rgba(46,117,182,0.15); border:1.5px solid rgba(46,117,182,0.4);
+  color:rgba(255,255,255,0.8); padding:11px 28px; border-radius:12px;
+  font-size:13px; font-weight:600; cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; gap:8px;
+}
+.nof-retry:hover { background:rgba(46,117,182,0.3); color:#fff; transform:translateY(-1px); }
+.nof-time { color:rgba(255,255,255,0.25); font-size:11px; }
+#nof-counter { color:rgba(255,255,255,0.4); font-size:11px; }
+</style>
 </head>
 <body>
+
+<!-- ══ NEXSYS OFFLINE SCREEN ══ -->
+<div id="nexsys-offline">
+  <div class="nof-icon">⚡</div>
+  <div class="nof-logo">NEX<span>SYS</span></div>
+  <div class="nof-badge">● Sistema sin conexión</div>
+  <h3 class="nof-title">Sin acceso al servidor</h3>
+  <p class="nof-sub">No se pudo establecer conexión con la API de NEXSYS. Verifica tu conexión a internet e intenta de nuevo.</p>
+  <div class="nof-divider"></div>
+  <button class="nof-retry" onclick="retryConnection()">
+    <span style="font-size:16px">↻</span> Reintentar conexión
+  </button>
+  <span id="nof-counter"></span>
+</div>
 
 <!-- ── OVERLAY PANEL USUARIO ── -->
 <div class="user-panel-overlay" id="userPanelOverlay" onclick="closeUserPanel()"></div>
@@ -539,21 +601,70 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
 <script>
 /* ── API STATUS ── */
 const API_URL = 'https://api-fastapi-production-fa70.up.railway.app';
-function checkApiStatus() {
-  fetch(API_URL + '/health', { signal: AbortSignal.timeout(5000) })
-    .then(r => {
-      const dot = document.getElementById('apiDot');
-      const lbl = document.getElementById('apiLabel');
-      if (r.ok) { dot.className='api-dot online'; lbl.textContent='API Online'; lbl.style.color='#10B981'; }
-      else setOffline();
-    }).catch(() => setOffline());
+let retryCountdown = null;
+let apiOnline = null;
+
+async function checkApiStatus() {
+  try {
+    const res = await fetch(API_URL + '/health', { signal: AbortSignal.timeout(5000) });
+    if (res.ok) {
+      setOnline();
+    } else {
+      setOffline();
+    }
+  } catch (e) {
+    setOffline();
+  }
 }
-function setOffline() {
-  document.getElementById('apiDot').className = 'api-dot offline';
+
+function setOnline() {
+  apiOnline = true;
+  // Ocultar pantalla offline
+  const screen = document.getElementById('nexsys-offline');
+  if (screen) screen.classList.remove('show');
+  document.body.style.overflow = '';
+  // Indicador topbar
+  const dot = document.getElementById('apiDot');
   const lbl = document.getElementById('apiLabel');
-  lbl.textContent = 'API Offline'; lbl.style.color = '#EF4444';
+  if (dot) { dot.className = 'api-dot online'; }
+  if (lbl) { lbl.textContent = 'API Online'; lbl.style.color = '#10B981'; }
+  // Limpiar countdown
+  if (retryCountdown) { clearInterval(retryCountdown); retryCountdown = null; }
 }
-checkApiStatus();
+
+function setOffline() {
+  apiOnline = false;
+  // Mostrar pantalla offline
+  const screen = document.getElementById('nexsys-offline');
+  if (screen) screen.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  // Indicador topbar
+  const dot = document.getElementById('apiDot');
+  const lbl = document.getElementById('apiLabel');
+  if (dot) { dot.className = 'api-dot offline'; }
+  if (lbl) { lbl.textContent = 'API Offline'; lbl.style.color = '#EF4444'; }
+  // Countdown para auto-retry
+  let secs = 30;
+  const counter = document.getElementById('nof-counter');
+  if (retryCountdown) clearInterval(retryCountdown);
+  retryCountdown = setInterval(() => {
+    secs--;
+    if (counter) counter.textContent = 'Reintentando en ' + secs + 's...';
+    if (secs <= 0) {
+      secs = 30;
+      checkApiStatus();
+    }
+  }, 1000);
+}
+
+function retryConnection() {
+  const counter = document.getElementById('nof-counter');
+  if (counter) counter.textContent = 'Verificando...';
+  checkApiStatus();
+}
+
+// Verificar al cargar y cada 30s
+document.addEventListener('DOMContentLoaded', checkApiStatus);
 setInterval(checkApiStatus, 30000);
 
 /* ── TEMA ── */
