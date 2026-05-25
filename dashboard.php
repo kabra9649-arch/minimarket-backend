@@ -3,6 +3,48 @@ require_once 'config/database.php';
 require_once 'config/session.php';
 requireLogin();
 
+// ── Verificar si la API está activa ──────────────────────────────────────────
+$apiUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on' ? 'https' : 'http')
+        . '://' . $_SERVER['HTTP_HOST'] . '/api/dashboard_data.php';
+
+$apiActiva = false;
+$ctx = stream_context_create(['http' => ['timeout' => 3, 'ignore_errors' => true]]);
+$apiResp = @file_get_contents($apiUrl, false, $ctx);
+if ($apiResp !== false) {
+    $apiJson = json_decode($apiResp, true);
+    $apiActiva = is_array($apiJson); // Responde con JSON válido → activa
+}
+
+// Roles permitidos para ver el dashboard
+$rolesPermitidos = ['admin', 'cajero', 'gerente'];
+$rolActual = $_SESSION['rol'] ?? '';
+
+// Si la API está apagada O el rol no está permitido → mostrar aviso y salir
+if (!$apiActiva || !in_array($rolActual, $rolesPermitidos)) {
+    $pageTitle = 'Dashboard';
+    include 'views/layouts/header.php';
+    ?>
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh;">
+      <div class="card shadow text-center p-4" style="max-width:420px;border-top:4px solid #C00000;">
+        <div class="mb-3">
+          <i class="bi bi-plug" style="font-size:48px;color:#C00000;"></i>
+        </div>
+        <h5 class="fw-bold mb-2" style="color:#C00000;">Sistema temporalmente no disponible</h5>
+        <p class="text-muted mb-3" style="font-size:14px;">
+          La conexión con el servidor de datos está inactiva en este momento.<br>
+          Por favor, intente nuevamente en unos minutos o contacte al administrador.
+        </p>
+        <button onclick="location.reload()" class="btn btn-sm text-white" style="background:#1F4E79;">
+          <i class="bi bi-arrow-clockwise me-1"></i> Reintentar
+        </button>
+      </div>
+    </div>
+    <?php
+    include 'views/layouts/footer.php';
+    exit;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 $db = getDB();
 $pageTitle = 'Dashboard';
 
