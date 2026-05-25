@@ -3,6 +3,14 @@ require_once 'config/database.php';
 require_once 'config/session.php';
 requireLogin();
 
+// Solo verificar rol desde PHP
+$rolesPermitidos = ['admin', 'cajero', 'gerente'];
+$rolActual = $_SESSION['rol'] ?? '';
+if (!in_array($rolActual, $rolesPermitidos)) {
+    header('Location: /unauthorized.php');
+    exit;
+}
+
 $db = getDB();
 $pageTitle = 'Dashboard';
 
@@ -47,6 +55,36 @@ $topHoy = $db->query("SELECT p.nombre, SUM(dv.cantidad) AS qty, SUM(dv.subtotal)
 
 include 'views/layouts/header.php';
 ?>
+
+<!-- ── OVERLAY: API OFFLINE ─────────────────────────────────────────────── -->
+<div id="api-offline-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg,#f8f9fa);align-items:center;justify-content:center;">
+  <div class="card shadow text-center p-4" style="max-width:420px;width:90%;border-top:4px solid #C00000;">
+    <div class="mb-3"><i class="bi bi-plug" style="font-size:52px;color:#C00000;"></i></div>
+    <h5 class="fw-bold mb-2" style="color:#C00000;">Sistema temporalmente no disponible</h5>
+    <p class="text-muted mb-3" style="font-size:14px;">
+      La conexión con el servidor de datos está inactiva en este momento.<br>
+      Por favor, intente nuevamente en unos minutos o contacte al administrador.
+    </p>
+    <button onclick="location.reload()" class="btn text-white fw-bold" style="background:#1F4E79;">
+      <i class="bi bi-arrow-clockwise me-1"></i> Reintentar
+    </button>
+  </div>
+</div>
+<script>
+(function checkApi() {
+    fetch("/api/dashboard_data.php", { method: "GET", cache: "no-store" })
+        .then(function(r) { if (!r.ok) throw new Error("not ok"); return r.json(); })
+        .then(function(data) {
+            if (!data || typeof data !== "object") throw new Error("invalid");
+            document.getElementById("api-offline-overlay").style.display = "none";
+        })
+        .catch(function() {
+            var overlay = document.getElementById("api-offline-overlay");
+            overlay.style.display = "flex";
+        });
+})();
+</script>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
 
 <style>
 /* ── RESPONSIVE DASHBOARD ── */
