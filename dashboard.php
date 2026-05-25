@@ -65,6 +65,27 @@ include 'views/layouts/header.php';
 [data-theme="dark"] #reloj-grande { color: #60a5fa !important; }
 [data-theme="dark"] #fecha-cajero { color: #94a3b8 !important; }
 [data-theme="dark"] .card:not([style*="background"]) .small { color: var(--text-muted) !important; }
+
+/* ── Tarjetas cajero modo oscuro ── */
+[data-theme="dark"] .card[style*="background"] * { color: #fff !important; }
+[data-theme="dark"] .card[style*="gradient"] .small { color: rgba(255,255,255,0.75) !important; }
+[data-theme="dark"] .card[style*="gradient"] .fw-bold { color: #fff !important; }
+[data-theme="dark"] .card[style*="gradient"] .opacity-75 { color: rgba(255,255,255,0.75) !important; }
+[data-theme="dark"] .card[style*="gradient"] .opacity-40 { color: rgba(255,255,255,0.4) !important; }
+[data-theme="dark"] .card[style*="#1F4E79"] * { color: #fff !important; }
+[data-theme="dark"] .card[style*="#0F6E56"] * { color: #fff !important; }
+[data-theme="dark"] .card[style*="#BF5800"] * { color: #fff !important; }
+[data-theme="dark"] .card[style*="#5B4FCF"] * { color: #fff !important; }
+[data-theme="dark"] .card[style*="#555"] * { color: #fff !important; }
+[data-theme="dark"] [style*="opacity:.7"] { color: rgba(255,255,255,0.7) !important; }
+[data-theme="dark"] [style*="opacity:.6"] { color: rgba(255,255,255,0.6) !important; }
+[data-theme="dark"] [style*="opacity:.85"] { color: rgba(255,255,255,0.85) !important; }
+[data-theme="dark"] [style*="letter-spacing:3px"] { color: rgba(255,255,255,0.6) !important; }
+[data-theme="dark"] [style*="font-size:36px"] { color: #60a5fa !important; }
+[data-theme="dark"] [style*="color:#BF5800"] { color: #f59e0b !important; }
+[data-theme="dark"] [style*="color:#64748b"] { color: #94a3b8 !important; }
+[data-theme="dark"] [style*="font-style:italic"] { color: #e2e8f0 !important; }
+[data-theme="dark"] .text-white * { color: #fff !important; }
 </style>
 
 <!-- TARJETAS -->
