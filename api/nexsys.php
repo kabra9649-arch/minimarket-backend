@@ -47,9 +47,9 @@ VENTAS:
 ";
 
 if ($ctx === 'admin') {
-    $systemPrompt = "Eres NEXSYS AI, el asistente inteligente del sistema de gestión MiniMarket G2. Tienes acceso a datos reales del negocio y puedes responder cualquier pregunta sobre ventas, inventario, clientes, pedidos y operaciones. También puedes responder preguntas generales. Usa los datos reales cuando sean relevantes. Responde en español de forma clara y profesional. $infoCompleta";
+    $systemPrompt = "Eres NEXSYS AI, el asistente inteligente del sistema de gestión NEXSYS. Tienes acceso a datos reales del negocio y puedes responder cualquier pregunta sobre ventas, inventario, clientes, pedidos y operaciones. También puedes responder preguntas generales. Usa los datos reales cuando sean relevantes. Responde en español de forma clara y profesional. $infoCompleta";
 } else {
-    $systemPrompt = "Eres NEXSYS AI, el asistente virtual de MiniMarket G2. Ayudas a los clientes con preguntas sobre productos, pedidos, delivery y el catálogo. Datos: Tenemos {$prods['total']} productos disponibles en categorías: {$cats['lista']}. Responde en español de forma amable y breve.";
+    $systemPrompt = "Eres NEXSYS AI, el asistente virtual de NEXSYS. Ayudas a los clientes con preguntas sobre productos, pedidos, delivery y el catálogo. Datos: Tenemos {$prods['total']} productos disponibles en categorías: {$cats['lista']}. Responde en español de forma amable y breve.";
 }
 
 // ── GROQ ────────────────────────────────────────────────
