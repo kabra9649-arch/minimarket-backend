@@ -63,14 +63,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['accion'] ?? '') === 'olvid
             $headers .= "Reply-To: {$correoCliente}\r\n";
             $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
-            $enviado = curl($adminEmail, $asunto, $mensaje, $headers);
+            $webhookUrl = 'https://n8n-production-91d2.up.railway.app/webhook/recuperar-password';
+$payload = json_encode([
+    'nombre' => $nombreCliente,
+    'correo' => $correoCliente,
+    'fecha'  => $fecha
+]);
+$ch = curl_init($webhookUrl);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+$resp = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
 
-            if ($enviado) {
-                $success = 'Solicitud enviada. El administrador recibira un aviso y te contactara para restablecer tu contrasena.';
-                $modo = 'cliente';
-            } else {
-                $error = 'Hubo un problema al enviar la solicitud. Intenta mas tarde.';
-            }
+if ($httpCode >= 200 && $httpCode < 300) {
+    $success = 'Solicitud enviada. El administrador recibira un aviso y te contactara para restablecer tu contrasena.';
+    $modo = 'cliente';
+} else {
+    $error = 'Hubo un problema al enviar la solicitud. Intenta mas tarde.';
+}
         }
     }
 }
