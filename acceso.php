@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['accion'] ?? '') === 'olvid
             $headers .= "Reply-To: {$correoCliente}\r\n";
             $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
-            $enviado = mail($adminEmail, $asunto, $mensaje, $headers);
+            $enviado = curl($adminEmail, $asunto, $mensaje, $headers);
 
             if ($enviado) {
                 $success = 'Solicitud enviada. El administrador recibira un aviso y te contactara para restablecer tu contrasena.';
