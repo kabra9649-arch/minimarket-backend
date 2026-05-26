@@ -89,8 +89,44 @@ if ($httpCode >= 200 && $httpCode < 300) {
     }
 }
 
-$esCliente = $modo === 'cliente';
-$esOlvide  = $modo === 'olvide';
+// ── REGISTRO CLIENTE ────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['accion'] ?? '') === 'registro') {
+    $nombre    = trim($_POST['nombre']    ?? '');
+    $cedula    = trim($_POST['cedula']    ?? '');
+    $telefono  = trim($_POST['telefono']  ?? '');
+    $email     = trim($_POST['email_reg'] ?? '');
+    $direccion = trim($_POST['direccion'] ?? '');
+    $pass      = trim($_POST['pass_reg']  ?? '');
+    $pass2     = trim($_POST['pass_reg2'] ?? '');
+    $modo = 'registro';
+
+    if (!$nombre || !$email || !$pass) {
+        $error = 'Nombre, correo y contraseña son obligatorios.';
+    } elseif ($pass !== $pass2) {
+        $error = 'Las contraseñas no coinciden.';
+    } elseif (strlen($pass) < 6) {
+        $error = 'La contraseña debe tener al menos 6 caracteres.';
+    } else {
+        $db = getDB();
+        $st = $db->prepare("SELECT id FROM clientes WHERE email=?");
+        $st->bind_param('s', $email); $st->execute();
+        if ($st->get_result()->num_rows > 0) {
+            $error = 'Ya existe una cuenta con ese correo.';
+        } else {
+            $hash = password_hash($pass, PASSWORD_DEFAULT);
+            $st2  = $db->prepare("INSERT INTO clientes (nombre,cedula,telefono,email,password,direccion,activo) VALUES (?,?,?,?,?,?,1)");
+            $st2->bind_param('ssssss', $nombre, $cedula, $telefono, $email, $hash, $direccion);
+            $st2->execute(); $st2->close();
+            $success = '¡Cuenta creada! Ya puedes iniciar sesión.';
+            $modo = 'cliente';
+        }
+        $st->close();
+    }
+}
+
+$esCliente  = $modo === 'cliente';
+$esRegistro = $modo === 'registro';
+$esOlvide   = $modo === 'olvide';
 ?>
 <!DOCTYPE html>
 <html lang="es" data-theme="light">
@@ -198,8 +234,11 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items
       <button class="auth-tab <?= $esCliente?'active':'' ?>" onclick="switchTab('cliente')">
         <i class="bi bi-person me-1"></i>Iniciar Sesión
       </button>
+      <button class="auth-tab <?= $esRegistro?'active':'' ?>" onclick="switchTab('registro')">
+        <i class="bi bi-person-plus me-1"></i>Crear Cuenta
+      </button>
       <button class="auth-tab <?= $esOlvide?'active':'' ?>" onclick="switchTab('olvide')">
-        <i class="bi bi-key me-1"></i>¿Olvidaste tu contraseña?
+        <i class="bi bi-key me-1"></i>¿Olvidé mi contraseña?
       </button>
     </div>
 
@@ -235,8 +274,55 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items
           </div>
           <button type="submit" class="btn-auth"><i class="bi bi-shop me-2"></i>Entrar al Catálogo</button>
         </form>
-        <div class="divider mt-3">¿Olvidaste tu contraseña?</div>
-        <button class="btn btn-outline-warning w-100 btn-sm mt-1" onclick="switchTab('olvide')"><i class="bi bi-key me-1"></i>Recuperar acceso</button>
+        <div class="divider mt-3">¿Primera vez aquí?</div>
+        <button class="btn btn-outline-success w-100 btn-sm mt-1" onclick="switchTab('registro')"><i class="bi bi-person-plus me-1"></i>Crear cuenta gratis</button>
+        <button class="btn btn-outline-warning w-100 btn-sm mt-2" onclick="switchTab('olvide')"><i class="bi bi-key me-1"></i>Olvidé mi contraseña</button>
+      </div>
+
+      <!-- REGISTRO -->
+      <div class="tab-pane <?= $esRegistro?'show':'' ?>" id="tabRegistro">
+        <form method="POST">
+          <input type="hidden" name="accion" value="registro">
+          <div class="row g-2">
+            <div class="col-12">
+              <label class="form-label">Nombre completo *</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input type="text" name="nombre" class="form-control" placeholder="Tu nombre" required>
+              </div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Cédula</label>
+              <input type="text" name="cedula" class="form-control" placeholder="000-0000000-0">
+            </div>
+            <div class="col-6">
+              <label class="form-label">Teléfono</label>
+              <input type="text" name="telefono" class="form-control" placeholder="809-000-0000">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Correo *</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input type="email" name="email_reg" class="form-control" placeholder="tucorreo@gmail.com" required>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Dirección</label>
+              <input type="text" name="direccion" class="form-control" placeholder="Sector, calle...">
+            </div>
+            <div class="col-6">
+              <label class="form-label">Contraseña *</label>
+              <input type="password" name="pass_reg" class="form-control" placeholder="••••••" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Confirmar *</label>
+              <input type="password" name="pass_reg2" class="form-control" placeholder="••••••" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-auth mt-3"><i class="bi bi-person-check me-2"></i>Crear Cuenta</button>
+        </form>
+        <div class="divider mt-3">¿Ya tienes cuenta?</div>
+        <button class="btn btn-outline-primary w-100 btn-sm mt-1" onclick="switchTab('cliente')">Iniciar sesión</button>
       </div>
 
       <!-- OLVIDÉ MI CONTRASEÑA -->
@@ -274,11 +360,11 @@ body{font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items
 
 <script>
 function switchTab(tab){
-  ['cliente','olvide'].forEach(t=>{
+  ['cliente','registro','olvide'].forEach(t=>{
     document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('show',t===tab);
   });
   document.querySelectorAll('.auth-tab').forEach((el,i)=>{
-    el.classList.toggle('active',['cliente','olvide'][i]===tab);
+    el.classList.toggle('active',['cliente','registro','olvide'][i]===tab);
   });
 }
 function applyLoginTheme(t){
