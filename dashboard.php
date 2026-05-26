@@ -437,7 +437,7 @@ include 'views/layouts/header.php';
 </div>
 
 <script>
-// Reloj cajero en tiempo real
+// Reloj cajero en Tiempo real
 function actualizarReloj() {
   const now = new Date();
   const h = String(now.getHours()).padStart(2,'0');
