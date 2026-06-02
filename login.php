@@ -489,9 +489,6 @@ body {
       <button class="auth-tab active" type="button">
         <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
       </button>
-      <a href="acceso.php" class="auth-tab">
-        <i class="bi bi-person-plus"></i> Registro
-      </a>
     </div>
 
     <?php if ($error): ?>
