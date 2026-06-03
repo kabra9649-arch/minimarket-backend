@@ -452,7 +452,109 @@ function toggleTheme(){
 </script>
 <?php endif; ?>
 
-<?php // include __DIR__ . '/views/layouts/nexsys_widget.php'; ?>
+<!-- ── NEXSYS AI WIDGET CLIENTE ── -->
+<style>
+#chat-btn-cli{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1F4E79,#2E75B6);border:none;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 20px rgba(31,78,121,.4);z-index:1000;transition:all .2s;}
+#chat-btn-cli:hover{transform:scale(1.1);}
+#chat-win-cli{display:none;position:fixed;bottom:86px;right:24px;width:340px;height:460px;background:#0d2340;border-radius:18px;box-shadow:0 12px 50px rgba(0,0,0,.4);border:1px solid rgba(46,117,182,.3);z-index:1001;flex-direction:column;overflow:hidden;}
+#chat-win-cli.open{display:flex;}
+.cwc-header{background:linear-gradient(135deg,#1F4E79,#2E75B6);padding:14px 16px;display:flex;align-items:center;gap:10px;}
+.cwc-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.cwc-info .cwc-name{color:#fff;font-weight:700;font-size:14px;}
+.cwc-info .cwc-status{color:rgba(255,255,255,.6);font-size:11px;}
+.cwc-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;}
+.cwc-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.cwc-msg{max-width:85%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.5;}
+.cwc-msg.bot{background:rgba(46,117,182,.2);color:#d6e4f0;border-radius:4px 14px 14px 14px;}
+.cwc-msg.user{background:linear-gradient(135deg,#1F4E79,#2E75B6);color:#fff;align-self:flex-end;border-radius:14px 14px 4px 14px;}
+.cwc-msg.typing{color:rgba(255,255,255,.4);font-style:italic;}
+.cwc-footer{padding:10px;border-top:1px solid rgba(46,117,182,.2);display:flex;gap:8px;}
+.cwc-footer input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(46,117,182,.3);color:#fff;border-radius:10px;padding:9px 13px;font-size:13px;outline:none;}
+.cwc-footer input::placeholder{color:rgba(255,255,255,.3);}
+.cwc-footer input:focus{border-color:#2E75B6;}
+.cwc-send{background:linear-gradient(135deg,#1F4E79,#2E75B6);border:none;color:#fff;width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:16px;transition:opacity .2s;}
+.cwc-send:hover{opacity:.85;}
+.cwc-quick{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px;}
+.cwc-quick button{background:rgba(46,117,182,.15);border:1px solid rgba(46,117,182,.3);color:#94b8d4;font-size:11px;padding:5px 10px;border-radius:20px;cursor:pointer;transition:all .2s;}
+.cwc-quick button:hover{background:rgba(46,117,182,.3);color:#fff;}
+</style>
+
+<button id="chat-btn-cli" onclick="toggleChatCli()" title="NEXSYS AI">💬</button>
+
+<div id="chat-win-cli">
+  <div class="cwc-header">
+    <div class="cwc-avatar">⚡</div>
+    <div class="cwc-info">
+      <div class="cwc-name">NEXSYS AI</div>
+      <div class="cwc-status">● En línea · Tu asistente personal</div>
+    </div>
+    <button class="cwc-close" onclick="toggleChatCli()">×</button>
+  </div>
+  <div class="cwc-msgs" id="cwcMsgs">
+    <div class="cwc-msg bot">¡Hola, <strong><?= htmlspecialchars(explode(' ', $cliente['nombre'])[0]) ?></strong>! 👋 Soy NEXSYS AI. Puedo decirte el estado de tu pedido, los productos disponibles y más. ¿En qué te ayudo?</div>
+  </div>
+  <div class="cwc-quick" id="cwcQuick">
+    <button onclick="sendCwc('¿Cuál es el estado de mi pedido?')">📦 Estado de mi pedido</button>
+    <button onclick="sendCwc('¿Qué productos tienen disponibles?')">🛍️ Ver productos</button>
+    <button onclick="sendCwc('¿Cuánto cuesta el delivery?')">🚴 Costo delivery</button>
+    <button onclick="sendCwc('¿Cuándo llega mi pedido?')">⏰ ¿Cuándo llega?</button>
+  </div>
+  <div class="cwc-footer">
+    <input type="text" id="cwcInput" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')sendCwc()">
+    <button class="cwc-send" onclick="sendCwc()">➤</button>
+  </div>
+</div>
+
+<script>
+const CWC_CLIENTE_ID = <?= (int)$cliente['id'] ?>;
+
+function toggleChatCli() {
+  const w = document.getElementById('chat-win-cli');
+  w.classList.toggle('open');
+  if (w.classList.contains('open')) {
+    document.getElementById('cwcInput').focus();
+  }
+}
+
+async function sendCwc(textoFijo) {
+  const input = document.getElementById('cwcInput');
+  const msgs  = document.getElementById('cwcMsgs');
+  const quick = document.getElementById('cwcQuick');
+  const msg   = textoFijo || input.value.trim();
+  if (!msg) return;
+
+  // Ocultar botones rápidos
+  if (quick) quick.style.display = 'none';
+
+  // Mensaje del usuario
+  msgs.innerHTML += `<div class="cwc-msg user">${msg}</div>`;
+  input.value = '';
+
+  // Typing indicator
+  const typingId = 'typing_' + Date.now();
+  msgs.innerHTML += `<div class="cwc-msg bot typing" id="${typingId}">NEXSYS AI está escribiendo...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const res = await fetch('/api/nexsys.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mensaje:    msg,
+        contexto:   'cliente',
+        cliente_id: CWC_CLIENTE_ID
+      })
+    });
+    const data = await res.json();
+    document.getElementById(typingId)?.remove();
+    msgs.innerHTML += `<div class="cwc-msg bot">${data.respuesta}</div>`;
+  } catch(e) {
+    document.getElementById(typingId)?.remove();
+    msgs.innerHTML += `<div class="cwc-msg bot">Hubo un problema de conexión. Intenta de nuevo.</div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+</script>
 
 <!-- ── MODAL DETALLE PRODUCTO ── -->
 <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
