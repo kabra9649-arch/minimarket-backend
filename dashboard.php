@@ -73,16 +73,16 @@ include 'views/layouts/header.php';
 [data-theme="dark"] .card[style*="gradient"] .opacity-75 { color: rgba(255,255,255,0.75) !important; }
 [data-theme="dark"] .card[style*="gradient"] .opacity-40 { color: rgba(255,255,255,0.4) !important; }
 [data-theme="dark"] .card[style*="#1F4E79"] * { color: #fff !important; }
-[data-theme="dark"] .card[style*="#0F6E56"] * { color: #fff !important; }
-[data-theme="dark"] .card[style*="#BF5800"] * { color: #fff !important; }
-[data-theme="dark"] .card[style*="#5B4FCF"] * { color: #fff !important; }
+[data-theme="dark"] .card[style*="#0D7377"] * { color: #fff !important; }
+[data-theme="dark"] .card[style*="#475569"] * { color: #fff !important; }
+[data-theme="dark"] .card[style*="#4338CA"] * { color: #fff !important; }
 [data-theme="dark"] .card[style*="#555"] * { color: #fff !important; }
 [data-theme="dark"] [style*="opacity:.7"] { color: rgba(255,255,255,0.7) !important; }
 [data-theme="dark"] [style*="opacity:.6"] { color: rgba(255,255,255,0.6) !important; }
 [data-theme="dark"] [style*="opacity:.85"] { color: rgba(255,255,255,0.85) !important; }
 [data-theme="dark"] [style*="letter-spacing:3px"] { color: rgba(255,255,255,0.6) !important; }
 [data-theme="dark"] [style*="font-size:36px"] { color: #60a5fa !important; }
-[data-theme="dark"] [style*="color:#BF5800"] { color: #f59e0b !important; }
+[data-theme="dark"] [style*="color:#475569"] { color: #f59e0b !important; }
 [data-theme="dark"] [style*="color:#64748b"] { color: #94a3b8 !important; }
 [data-theme="dark"] [style*="font-style:italic"] { color: #e2e8f0 !important; }
 [data-theme="dark"] .text-white * { color: #fff !important; }
@@ -100,7 +100,7 @@ include 'views/layouts/header.php';
     </div>
   </div>
   <div class="col">
-    <div class="card text-white h-100" style="background:#0F6E56;">
+    <div class="card text-white h-100" style="background:linear-gradient(135deg,#0D7377,#14A085);">
       <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center" style="min-height:64px;">
         <div><div style="font-size:10px;opacity:.75">Ingresos hoy</div><div class="fw-bold" style="font-size:18px">RD$ <?= number_format($ventasHoy['ingresos'],0) ?></div></div>
         <i class="bi bi-cash-stack opacity-30" style="font-size:20px"></i>
@@ -109,7 +109,7 @@ include 'views/layouts/header.php';
   </div>
   <?php if (true): // always show rest for admin ?>
   <div class="col">
-    <div class="card text-white h-100" style="background:linear-gradient(135deg,#BF5800,#e07020);">
+    <div class="card text-white h-100" style="background:linear-gradient(135deg,#475569,#64748B);">
       <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center" style="min-height:64px;">
         <div><div style="font-size:10px;opacity:.75">Ticket promedio</div><div class="fw-bold" style="font-size:18px">RD$ <?= number_format($ticketPromedio,2) ?></div></div>
         <i class="bi bi-graph-up opacity-30" style="font-size:20px"></i>
@@ -125,7 +125,7 @@ include 'views/layouts/header.php';
     </div>
   </div>
   <div class="col">
-    <div class="card text-white h-100" style="background:#5B4FCF;">
+    <div class="card text-white h-100" style="background:linear-gradient(135deg,#4338CA,#6366F1);">
       <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center" style="min-height:64px;">
         <div><div style="font-size:10px;opacity:.75">Pedidos hoy</div><div class="fw-bold" style="font-size:18px"><?= $pedHoy['total'] ?></div></div>
         <i class="bi bi-bag-check opacity-30" style="font-size:20px"></i>
@@ -277,7 +277,7 @@ include 'views/layouts/header.php';
     </div>
   </div>
   <div class="col-6 col-md-3">
-    <div class="card text-white h-100" style="background:#0F6E56;">
+    <div class="card text-white h-100" style="background:linear-gradient(135deg,#0D7377,#14A085);">
       <div class="card-body py-3 d-flex justify-content-between align-items-center">
         <div>
           <div class="small opacity-75">Ingresos hoy</div>
@@ -288,7 +288,7 @@ include 'views/layouts/header.php';
     </div>
   </div>
   <div class="col-6 col-md-3">
-    <div class="card text-white h-100" style="background:linear-gradient(135deg,#BF5800,#e07020);">
+    <div class="card text-white h-100" style="background:linear-gradient(135deg,#475569,#64748B);">
       <div class="card-body py-3 d-flex justify-content-between align-items-center">
         <div>
           <div class="small opacity-75">Ticket promedio</div>
@@ -349,7 +349,7 @@ include 'views/layouts/header.php';
 <div class="row g-2 mb-3">
   <div class="col-12 col-md-8">
     <div class="card h-100">
-      <div class="card-header py-2 text-white d-flex justify-content-between align-items-center" style="background:#0F6E56;">
+      <div class="card-header py-2 text-white d-flex justify-content-between align-items-center" style="background:linear-gradient(135deg,#0D7377,#14A085);">
         <span><i class="bi bi-star-fill me-2"></i>Más Vendidos Hoy</span>
         <span class="badge bg-light text-dark" style="font-size:10px;"><?= date('d/m/Y') ?></span>
       </div>
@@ -371,7 +371,7 @@ include 'views/layouts/header.php';
               $maxQty = !empty($topHoyArr) ? max(array_column($topHoyArr,'qty')) : 1;
               foreach($topHoyArr as $rank => $tp):
               $pct = $maxQty > 0 ? round($tp['qty']/$maxQty*100) : 0;
-              $colors = ['#1F4E79','#2E75B6','#0F6E56','#BF5800','#5B4FCF'];
+              $colors = ['#1F4E79','#2E75B6','#0D7377','#4338CA','#14A085'];
               $color = $colors[$rank] ?? '#888';
             ?>
             <tr>
@@ -415,7 +415,7 @@ include 'views/layouts/header.php';
       <div class="col-12">
         <div class="card h-100" style="border-left:4px solid #BF5800;">
           <div class="card-body py-3">
-            <div style="font-size:11px;color:#BF5800;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;"><i class="bi bi-lightning-fill me-1"></i>Mensaje del día</div>
+            <div style="font-size:11px;color:#0D7377;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;"><i class="bi bi-lightning-fill me-1"></i>Mensaje del día</div>
             <?php
               $mensajes = [
                 "¡Cada venta cuenta! Sigue así, " . htmlspecialchars($_SESSION['nombre'] ?? '') . ".",
@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
         type: 'doughnut',
         data: {
             labels: initLabelsV,
-            datasets: [{ data:initDataV, backgroundColor:['#1F4E79','#2E75B6','#0F6E56','#BF5800','#7030A0'], borderWidth:2, borderColor:'#fff' }]
+            datasets: [{ data:initDataV, backgroundColor:['#1F4E79','#0D7377','#4338CA','#14A085','#6366F1'], borderWidth:2, borderColor:'#fff' }]
         },
         options: {
             responsive:true, maintainAspectRatio:false,
@@ -497,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
         type: 'doughnut',
         data: {
             labels: ['Efectivo','Tarjeta','Transferencia'],
-            datasets: [{ data:initMetodos, backgroundColor:['#0F6E56','#1F4E79','#BF5800'], borderWidth:2, borderColor:'#fff' }]
+            datasets: [{ data:initMetodos, backgroundColor:['#0D7377','#1F4E79','#4338CA'], borderWidth:2, borderColor:'#fff' }]
         },
         options: {
             responsive:true, maintainAspectRatio:false,
@@ -528,10 +528,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     type: 'line',
                     label: 'Tendencia',
                     data: mesesData,
-                    borderColor: '#BF5800',
-                    backgroundColor: 'rgba(191,88,0,0.1)',
+                    borderColor: '#14A085',
+                    backgroundColor: 'rgba(20,160,133,0.08)',
                     borderWidth: 2,
-                    pointBackgroundColor: '#BF5800',
+                    pointBackgroundColor: '#14A085',
                     pointRadius: 4,
                     tension: 0.4,
                     fill: true,
@@ -606,10 +606,10 @@ function autoRefresh() {
                     type: 'line',
                     label: 'Tendencia',
                     data: mesesData,
-                    borderColor: '#BF5800',
-                    backgroundColor: 'rgba(191,88,0,0.1)',
+                    borderColor: '#14A085',
+                    backgroundColor: 'rgba(20,160,133,0.08)',
                     borderWidth: 2,
-                    pointBackgroundColor: '#BF5800',
+                    pointBackgroundColor: '#14A085',
                     pointRadius: 4,
                     tension: 0.4,
                     fill: true,
