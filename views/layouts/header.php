@@ -526,7 +526,14 @@ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-w
       <div class="nav-section">Pedidos</div>
       <a href="/pedidos/nuevo.php" class="<?= basename($self)=='nuevo.php'&&strpos($self,'pedidos')!==false?'active':'' ?>"><i class="bi bi-bag-plus"></i> Nuevo Pedido</a>
       <a href="/pedidos/index.php?tipo=mostrador" class="<?= basename($self)=='index.php'&&strpos($self,'pedidos')!==false?'active':'' ?>"><i class="bi bi-list-check"></i> Pedidos Mostrador</a>
-      <a href="/pedidos/index.php?tipo=domicilio"><i class="bi bi-bicycle"></i> Pedidos Domicilio</a>
+      <a href="/pedidos/index.php?tipo=domicilio" class="<?= strpos($self,'domicilio')!==false?'active':'' ?>">
+        <i class="bi bi-bicycle"></i> Pedidos Domicilio
+        <?php
+        $pend_dom = $db_menu->query("SELECT COUNT(*) AS t FROM pedidos WHERE tipo='domicilio' AND estado NOT IN ('entregado','cancelado')")->fetch_assoc()['t'];
+        if ($pend_dom > 0): ?>
+          <span class="badge bg-danger ms-auto" style="font-size:10px"><?= $pend_dom ?></span>
+        <?php endif; ?>
+      </a>
       <div class="nav-section">Reportes</div>
       <a href="/reportes/ventas.php" class="<?= strpos($self,'reportes/ventas')!==false?'active':'' ?>"><i class="bi bi-bar-chart"></i> Reporte Ventas</a>
       <a href="/reportes/inventario.php" class="<?= strpos($self,'inventario')!==false?'active':'' ?>"><i class="bi bi-clipboard-data"></i> Reporte Inventario</a>
