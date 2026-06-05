@@ -6,6 +6,18 @@ requireLogin();
 $db = getDB();
 $pageTitle = 'WhatsApp — Alertas';
 
+// Eliminar alerta
+if (isset($_GET['eliminar'])) {
+    $db->query("DELETE FROM alertas_whatsapp WHERE id=".(int)$_GET['eliminar']);
+    header('Location: whatsapp.php'); exit();
+}
+
+// Eliminar todas
+if (isset($_GET['eliminar_todas'])) {
+    $db->query("DELETE FROM alertas_whatsapp");
+    header('Location: whatsapp.php'); exit();
+}
+
 // Marcar como leída
 if (isset($_GET['leer_todas'])) {
     $db->query("UPDATE alertas_whatsapp SET leido=1");
@@ -234,7 +246,10 @@ include '../views/layouts/header.php';
 
         <div class="wa-bubble <?= !$a['leido'] ? 'nueva' : '' ?>">
             <div class="wa-bubble-header">
-                <?php if ($a['tipo'] === 'stock_bajo'): ?>
+                <?php if (str_contains($a['mensaje'], '🛵') || str_contains($a['mensaje'], 'domicilio')): ?>
+                    <span class="wa-bubble-icon">🛵</span>
+                    <span class="wa-bubble-type" style="color:#075e54;">Pedido Domicilio</span>
+                <?php elseif ($a['tipo'] === 'stock_bajo'): ?>
                     <span class="wa-bubble-icon">⚠️</span>
                     <span class="wa-bubble-type stock">Stock Bajo</span>
                 <?php else: ?>
@@ -257,6 +272,12 @@ include '../views/layouts/header.php';
                 <?php else: ?>
                     <span>✓</span>
                 <?php endif; ?>
+                <a href="?eliminar=<?= $a['id'] ?>" class="ms-2"
+                   onclick="return confirm('¿Eliminar esta notificación?')"
+                   style="color:#e53935;font-size:11px;text-decoration:none;"
+                   title="Eliminar">
+                   <i class="bi bi-trash"></i>
+                </a>
             </div>
         </div>
 

@@ -66,6 +66,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $st2  = $db->prepare("INSERT INTO pedidos_domicilio (pedido_id, direccion, telefono, referencia, repartidor, costo_envio) VALUES (?,?,?,?,?,?)");
             $st2->bind_param('issssd', $pedido_id, $dir, $tel, $ref, $rep, $costo_envio);
             $st2->execute(); $st2->close();
+
+            // Registrar en alertas_whatsapp para el badge del menú
+            $nombreCliente = 'Cliente General';
+            if ($cliente_id) {
+                $cli2 = $db->query("SELECT nombre FROM clientes WHERE id=$cliente_id")->fetch_assoc();
+                $nombreCliente = $cli2['nombre'] ?? 'Cliente General';
+            }
+            $msgAlerta = "🛵 Pedido domicilio #$num — $nombreCliente — RD$ " . number_format($total, 2) . " — Dirección: $dir";
+            $stAlert = $db->prepare("INSERT INTO alertas_whatsapp (tipo, mensaje, leido) VALUES ('stock_bajo', ?, 0)");
+            $stAlert->bind_param('s', $msgAlerta);
+            $stAlert->execute();
+            $stAlert->close();
         }
 
 // Enviar correo al cliente si tiene email
